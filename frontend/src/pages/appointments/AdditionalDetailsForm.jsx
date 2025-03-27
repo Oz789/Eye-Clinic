@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 export default function AdditionalDetailsForm({ prevStep, values, handleChange }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState(values);
+  const BASE_URL = process.env.REACT_APP_API_URL;
 
   const handleInputChange = (field, value) => {
     const newData = { ...formData, [field]: value };
