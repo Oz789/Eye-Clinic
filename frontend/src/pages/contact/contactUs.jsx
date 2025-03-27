@@ -6,6 +6,7 @@ import "./contact.css";
 const ContactP = () => {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", message: "" });
   const [status, setStatus] = useState("");
+  const BASE_URL = process.env.REACT_APP_API_URL;
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -14,7 +15,7 @@ const ContactP = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5001/submit-form", formData);
+      const res = await axios.post(`${BASE_URL}/submit-form`, formData);
       setStatus(res.data.message);
       setFormData({ name: "", email: "", phone: "", message: "" });
     } catch (error) {

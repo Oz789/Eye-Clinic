@@ -18,7 +18,7 @@ export default function AdditionalDetailsForm({ prevStep, values, handleChange }
         sexType: typeof formData.sex,
         fullFormData: formData
       });
-      const response = await fetch('http://localhost:5001/api/patients/submit', {
+      const response = await fetch(`${BASE_URL}/api/patients/submit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

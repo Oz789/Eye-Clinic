@@ -6,10 +6,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 
-const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5001',
-});
-
+const BASE_URL = process.env.REACT_APP_API_URL;
 
 const theme = createTheme({
   components: {
@@ -62,7 +59,7 @@ const columns = [
     //     .catch((error) => console.error(" Error fetching test route:", error));
     // }, []);
     useEffect(() => {
-      axios.get('http://localhost:5001/api/messages')
+      axios.get(`${BASE_URL}/api/messages`)
       .then((response) => SetMsg(response.data))
       .catch((error) => console.error("Error fetching messages:", error));
     }, []);

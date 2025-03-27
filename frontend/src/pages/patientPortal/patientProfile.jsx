@@ -5,6 +5,8 @@ import { useParams } from "react-router-dom";
 const PatientProfile = () => {
   const { id } = useParams();  // grabbing patient ID from URL param
   
+  const BASE_URL = process.env.REACT_APP_API_URL;
+  
   const [patientData, setPatientData] = useState({
     name: "",
     email: "",
@@ -33,7 +35,7 @@ const PatientProfile = () => {
   useEffect(() => {
     const fetchPatientData = async () => {
       try {
-        const res = await fetch(`http://localhost:5001/api/patients/${id}`);
+        const res = await fetch(`${BASE_URL}/api/patients/${id}`);
         if (!res.ok) throw new Error("Failed to fetch patient");
         const data = await res.json();
 

@@ -10,12 +10,15 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  
+  const BASE_URL = process.env.REACT_APP_API_URL;
+
 
 
   const handleLogin = async () => {
     console.log("Sending login for:", email, password);
 
-    try {const res = await fetch("http://localhost:5001/api/login/employee", {
+    try {const res = await fetch(`${BASE_URL}/api/login/employee`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -33,7 +36,7 @@ const Login = () => {
         }
       }
 
-      const resPatient = await fetch("http://localhost:5001/api/login/patient", {
+      const resPatient = await fetch(`${BASE_URL}/api/login/patient`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

@@ -10,6 +10,7 @@ const ReplyManager = (props) => {
 
     const [formData, setFormData] = useState({ name: "", email: "", phone: "", message: "" });
     const [status, setStatus] = useState("");
+    const BASE_URL = process.env.REACT_APP_API_URL;
   
     // Handle form input changes
     const handleChange = (e) => {
@@ -21,7 +22,7 @@ const ReplyManager = (props) => {
       e.preventDefault();
       try {
         console.log("Sending data to the server:", formData); // Debug: log form data
-        const res = await axios.post("http://localhost:5001/api/submit-form", formData);
+        const res = await axios.post(`${BASE_URL}/api/submit-form`, formData);
         setStatus(res.data.message);
         setFormData({ name: "", email: "", phone: "", message: "" }); // Reset form
       } catch (error) {

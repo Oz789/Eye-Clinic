@@ -16,6 +16,8 @@ const AdminDashboard = ({ sidebarContent, mainContent, extraContent }) => {
   const [licenseNumber, setLicenseNumber] = useState("");
   const [specialization, setSpecialization] = useState("");
 
+  const BASE_URL = process.env.REACT_APP_API_URL;
+
 
   const handleSubmit = async () => {
     if (!firstName || !lastName || !phone || !email || !password || !role) {
@@ -31,7 +33,7 @@ const AdminDashboard = ({ sidebarContent, mainContent, extraContent }) => {
     const isAdmin = role === "Manager" ? 1 : 0;
   
     try {
-      const res = await fetch("http://localhost:5001/api/employees/add-employee", {
+      const res = await fetch(`${BASE_URL}/api/employees/add-employee`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -53,7 +55,7 @@ const AdminDashboard = ({ sidebarContent, mainContent, extraContent }) => {
       }
 
       if (role === "Doctor") {
-        const doctorRes = await fetch("http://localhost:5001/api/doctor/add-doctor", {
+        const doctorRes = await fetch(`${BASE_URL}/api/doctor/add-doctor`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

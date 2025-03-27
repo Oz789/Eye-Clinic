@@ -12,7 +12,8 @@ const DoctorProfile = () => {
   const [patients, setPatients] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
 
-
+  const BASE_URL = process.env.REACT_APP_API_URL;
+  
   const analytics = {
     patientsThisWeek: 14,
     upcomingAppointments: 5
@@ -25,14 +26,14 @@ const DoctorProfile = () => {
   ];
 
   useEffect(() => {
-    fetch(`http://localhost:5001/api/doctors/${doctorID}`)
+    fetch(`${BASE_URL}/api/doctors/${doctorID}`)
       .then((res) => res.json())
       .then((data) => setDoctor(data))
       .catch((err) => console.error("Error fetching doctor:", err));
   }, [doctorID]);
 
   useEffect(() => {
-    fetch(`http://localhost:5001/api/doctors/${doctorID}/appointments`)
+    fetch(`${BASE_URL}/api/doctors/${doctorID}/appointments`)
       .then(res => res.json())
       .then(setAppointments);
   }, [doctorID]);
