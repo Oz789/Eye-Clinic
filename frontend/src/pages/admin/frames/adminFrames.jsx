@@ -7,6 +7,7 @@ import {
   Grid2,
   Typography,
   Button,
+  Box
 } from "@mui/material";
 import axios from "axios";
 
@@ -61,7 +62,7 @@ const AdminFrames = () => {
     try {
       await axios.delete(`http://localhost:5001/api/frames/${id}`);
       setViewModal(false);         // Close the modal
-      fetchFrames();               // Refresh frame list
+      fetchFrames();              
       console.log("Deleted frame ID:", id);
     } catch (error) {
       console.error("Error deleting frame:", error);
@@ -71,19 +72,51 @@ const AdminFrames = () => {
   return (
     <div>
       <AdminNavbar />
-      <Grid2 sx={{ paddingLeft: 4, paddingTop: 2 }}>
-        <Typography variant="h3">Eyeglasses</Typography>
-        <Typography variant="h6">Showing {frames.length} Products</Typography>
+      <Grid2
 
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ marginTop: 2 }}
-          onClick={() => setModal(true)}
-        >
-          + Add New Frame
-        </Button>
-      </Grid2>
+  sx={{ paddingX: 4, paddingTop: 2 }}
+>
+
+  <div>
+  <Typography
+    variant="subtitle1"
+    sx={{
+      fontFamily: "Serif",
+      fontSize: "20px",
+      textAlign: "center",
+      flexGrow: 1
+    }}
+  >
+    Showing {frames.length} Products
+  </Typography>
+  </div>
+
+  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+    <Button
+      variant="contained"
+      color="primary"
+      onClick={() => setModal(true)}
+      sx={{
+        minWidth: 0,
+        width: 48,
+        height: 48,
+        borderRadius: "50%",
+        fontSize: "1.5rem",
+        fontWeight: "bold",
+        lineHeight: 1,
+        boxShadow: 2,
+      }}
+    >
+      +
+    </Button>
+    <Typography
+      variant="subtitle1"
+      sx={{ fontFamily: "Bell MT, serif", fontWeight: 500 }}
+    >Add a Frame
+    </Typography>
+  </Box>
+</Grid2>
+
 
       <Grid2
         container
@@ -106,7 +139,7 @@ const AdminFrames = () => {
               {frame.name}
             </Typography>
             <Typography variant="h6" fontWeight="bold">
-              {parseFloat(frame.price).toFixed(2)} {/* Ensure consistent $ format */}
+              {parseFloat(frame.price).toFixed(2)} 
             </Typography>
           </div>
         </CardActionArea>
@@ -117,7 +150,7 @@ const AdminFrames = () => {
 
       {modal && (
         <AdminFrameModal
-          toggleModal={() => setModal(false)}
+        onClose={() => setModal(false)}
           onSubmit={handleCreate}
         />
       )}

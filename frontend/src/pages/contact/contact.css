@@ -1,84 +1,93 @@
-/* Centering the form container */
-.contact-form-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 80vh;
-    padding: 20px;
-  }
-  
-  .contact-form {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 600px;
-  }
-  
-  /* Styling form labels */
-  .contact-form label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  /* Styling input fields */
-  .contact-form input,
-  .contact-form textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-  }
-  
-  .contact-form input:focus,
-  .contact-form textarea:focus {
-    border-color: #0056b3;
-    outline: none;
-  }
-  
-  /* Submit button styling */
-  .submit-button {
-    background-color: #002855;
-    color: #ffffff;
-    border: none;
-    padding: 12px;
-    width: 100%;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .submit-button:hover {
-    background-color: #004080;
-  }
-  
-  /* Row layout for first and last name fields */
-  .form-group.row {
-    display: flex;
-    gap: 15px;
-  }
-  
-  .col {
-    flex: 1;
-  }
-  
-  /* Styling the required note */
-  .required-note {
-    color: #333;
-    font-size: 14px;
-    margin-top: 10px;
-    text-align: left;
-  }
-  
-  /* Media query for better responsiveness */
-  @media (max-width: 600px) {
-    .form-group.row {
-      flex-direction: column;
-    }
-  }
+.contact-page {
+  background: linear-gradient(to top, #ecfffb 10%, #edfffc 30%, #ffffff 60%);
+  min-height: 100vh;
+  padding: 3rem 2rem;
+  font-family: "Bell MT", serif;
+}
 
+.contact-title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-style: italic;
+  color: #00796B;
+  margin-bottom: 2.5rem;
+}
+
+.contact-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Boxes on left and right */
+.contact-box {
+  flex: 1;
+  min-width: 300px;
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.contact-box h2 {
+  color: #00796B;
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+
+.contact-box p {
+  color: #3E2723;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Form */
+.contact-box form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.contact-box input,
+.contact-box textarea {
+  font-family: "Bell MT", serif;
+  font-style: italic;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  resize: vertical;
+  background-color: #f8fffc;
+}
+
+.contact-box textarea {
+  min-height: 100px;
+}
+
+.contact-box button {
+  font-family: "Bell MT", serif;
+  font-size: 1rem;
+  font-style: italic;
+  font-weight: bold;
+  color: white;
+  background-color: #00796B;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.contact-box button:hover {
+  background-color: #005f56;
+}
+
+.status-message {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #00796B;
+  font-style: italic;
+}

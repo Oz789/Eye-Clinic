@@ -6,7 +6,8 @@ import {
   CardMedia,
   Grid,
   Typography,
-  Button
+  Button,
+  Box
 } from "@mui/material";
 import axios from "axios";
 import AdminCreateContactModal from "./adminCreateContacts";
@@ -65,14 +66,45 @@ const AdminContacts = () => {
     <div>
       <AdminNavbar />
       <Grid sx={{ paddingLeft: 4, paddingTop: 2 }}>
-          <Typography variant="h3">Contact Lenses</Typography>
-        <Typography variant="h6">Showing {contacts.length} Products</Typography>
+      <div>
+  <Typography
+    variant="subtitle1"
+    sx={{
+      fontFamily: "Serif",
+      fontSize: "20px",
+      textAlign: "center",
+      flexGrow: 1
+    }}
+  >
+    Showing {contacts.length} Products
+  </Typography>
+  </div>
 
 
-      <Button variant="contained" color="primary"
-          sx={{ marginTop: 2 }} onClick={() => setModal(true)}> + Add New Contact Lens
-        </Button>
-
+  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+    <Button
+      variant="contained"
+      color="primary"
+      onClick={() => setModal(true)}
+      sx={{
+        minWidth: 0,
+        width: 48,
+        height: 48,
+        borderRadius: "50%",
+        fontSize: "1.5rem",
+        fontWeight: "bold",
+        lineHeight: 1,
+        boxShadow: 2,
+      }}
+    >
+      +
+    </Button>
+    <Typography
+      variant="subtitle1"
+      sx={{ fontFamily: "Bell MT, serif", fontWeight: 500 }}
+    >Add a Product
+    </Typography>
+  </Box>
       </Grid>
 
       <Grid container spacing={2} justifyContent="center" sx={{ padding: 2 }}>

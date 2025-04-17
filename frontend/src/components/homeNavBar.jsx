@@ -1,69 +1,60 @@
-import React, {useState} from "react";
-import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Box, Button, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
+import ProfileDropdown from "./profileDropdown";
+import useCartStore from "../components/cartStorage";
+import './navBar.css';
 
+const NavBar = () => {
+  const [scrolled, setScrolled] = useState(false);
+  const { cart } = useCartStore();
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const offset = window.scrollY;
+      setScrolled(offset > 100);
+    };
 
-const Navbar = () => {
-  
-  const [productsDropdown, setProductsDropdown] = useState(false);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar sx={{ backgroundColor: "white", height: "65px", boxShadow: "brown", borderBottom: "2px solid #8B5A2B" }} position="static">
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Button className="nav-link" component={Link} to="/home">
-              <Typography sx={{ fontFamily: "'Bell MT', serif", fontStyle: "italic",fontWeight: "bold", color: "#3E2723" }}>
-                Home
-              </Typography>
-            </Button>
+    <>
+    <Box
+        sx={{
+          backgroundColor: "black",
+          height: "70px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <img src={"/images/logo"} alt="logo" style={{ height: "150px" }} />
+      </Box>
+      <Box className="navbar">
+        <Box className="nav-links">
+        <Typography className="divider">|</Typography>
+          <Button component={Link} to="/home" className="nav-button">Home</Button>
+          <Typography className="divider">|</Typography>
+          <Button component={Link} to="/log-in" className="nav-button">Patient's Center</Button>
+          <Typography className="divider">|</Typography>
+          <Button component={Link} to="/services" className="nav-button">Services</Button>
+          <Typography className="divider">|</Typography>
+          <Button component={Link} to="/frames" className="nav-button">Contacts & Frames</Button>
+          <Typography className="divider">|</Typography>
+          <Button component={Link} to="/about" className="nav-button">About</Button>
+          <Typography className="divider">|</Typography>
+      
+        </Box>
 
-          <Box sx={{ display: "flex", flex: 2, gap: "20px", justifyContent: "center", alignItems: "center"}}>
-
-
-            <Typography sx={{ color: "#3E2723", fontSize: "25px"}}></Typography>
-            <Button className="nav-link" component={Link} to="/log-in">
-              <Typography sx={{ fontFamily: "'Bell MT', serif", fontStyle: "italic", fontWeight:"bold", color: "#3E2723" }}>
-                Patient's Center
-              </Typography>
-            </Button>
-            
-            
-            <Typography sx={{ color: "#3E2723", fontSize: "25px"}}>|</Typography>
-            <Button className="nav-link" component={Link} to="/services">
-              <Typography sx={{ fontFamily: "'Bell MT', serif", fontStyle: "italic", fontWeight:"bold", color: "#3E2723" }}>
-                Services
-              </Typography>
-            </Button>
-
-            
-             <Typography sx={{ color: "#3E2723", fontSize: "25px"}}>|</Typography>
-            <Button className="nav-link" component={Link} to="/frames">
-              <Typography sx={{ fontFamily: "'Bell MT', serif", fontStyle: "italic", fontWeight:"bold", color: "#3E2723" }}>
-                Contacts & Frames
-              </Typography>
-            </Button>
-
-
-            <Typography sx={{ color: "#3E2723", fontSize: "25px"}}>|</Typography>
-            <Button className="nav-link" component={Link} to="/about">
-              <Typography sx={{ fontFamily: "'Bell MT', serif", fontStyle: "italic", fontWeight: "bold" ,color: "#3E2723" }}>
-                About
-              </Typography>
-            </Button>
-
-
-            <Typography sx={{ color: "#3E2723", fontSize: "25px"}}>|</Typography>
-            <Button className="nav-link" component={Link} to="/contact">
-              <Typography sx={{ fontFamily: "'Bell MT', serif", fontStyle: "italic", fontWeight:"bold", color: "#3E2723" }}>
-                Contact Us
-              </Typography>
-            </Button>
-          </Box>
-        </Toolbar>
-      </AppBar>
-    </Box>
+        <Box className="nav-right">
+          <ProfileDropdown />
+        </Box>
+      </Box>
+    </>
   );
 };
 
-export default Navbar;
+export default NavBar;

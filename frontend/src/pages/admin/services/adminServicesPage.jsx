@@ -6,7 +6,7 @@ import {
   CardMedia,
   Typography,
   Grid,
-  Button,
+  Button, Box
 } from "@mui/material";
 import axios from "axios";
 import AdminNavbar from "../../../components/navBar";
@@ -61,17 +61,33 @@ const [selectedService, setSelectedService] = useState(null);
     <div>
       <AdminNavbar />
       <Grid sx={{ padding: 4 }}>
-        <Typography variant="h3">Admin: Services</Typography>
-        <Typography variant="h6">Showing {services.length} Services</Typography>
+       
+        <Typography variant="h3" fontFamily={"Bell MT"} textAlign={"center"}>Our Services</Typography>
 
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ marginTop: 2 }}
-          onClick={() => setModalOpen(true)}
-        >
-          + Add New Service
-        </Button>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+    <Button
+      variant="contained"
+      color="primary"
+      onClick={() => setModalOpen(true)}
+      sx={{
+        minWidth: 0,
+        width: 48,
+        height: 48,
+        borderRadius: "50%",
+        fontSize: "1.5rem",
+        fontWeight: "bold",
+        lineHeight: 1,
+        boxShadow: 2,
+      }}
+    >
+      +
+    </Button>
+    <Typography
+      variant="subtitle1"
+      sx={{ fontFamily: "Serif", fontWeight: 500 }}
+    >Add a Service
+    </Typography>
+  </Box>
       </Grid>
 
       <Grid container spacing={2} justifyContent="center" sx={{ padding: 2 }}>
