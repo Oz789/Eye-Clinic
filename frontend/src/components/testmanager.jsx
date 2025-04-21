@@ -67,7 +67,7 @@ const styles = {
             };
           
             try {
-              await axios.post("http://localhost:5001/api/schedule", newEvent);
+              await axios.post(`${process.env.REACT_APP_API_URL}/api/schedule`, newEvent);
               alert("Event saved!");
           
               // Optional: add to calendar display
@@ -159,7 +159,7 @@ const styles = {
         };
 
         useEffect(() => {
-            axios.get('http://localhost:5001/api/schedule').then((res) => {
+            axios.get(`${process.env.REACT_APP_API_URL}/api/schedule`).then((res) => {
               console.log(res.data)
                 setConfig(prev =>({
                     ...prev,

@@ -26,7 +26,7 @@ const DoctorAppointments = () => {
     
 
 
-    fetch(`http://localhost:5001/api/doctors/${doctorID}/appointments`)
+    fetch(`${process.env.REACT_APP_API_URL}/api/doctors/${doctorID}/appointments`)
       .then(res => res.json())
       .then(data => {
         console.log("📦 Raw appointment data from API:", data);

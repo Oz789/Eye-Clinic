@@ -34,7 +34,7 @@ const UserFramesModal = ({ data, onClose }) => {
   useEffect(() => {
     const fetchStock = async () => {
       try {
-        const res = await axios.get(`http://localhost:5001/api/checkout/stock/frames/${data.frameID}`);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/checkout/stock/frames/${data.frameID}`);
         setStockQuantity(res.data.stockCount);
 
       } catch (err) {

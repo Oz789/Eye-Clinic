@@ -14,7 +14,7 @@ export default function GeneralInfoForm({ nextStep, handleChange, values }) {
     const fetchInsuranceOptions = async () => {
       try {
         console.log('Fetching insurance options...');
-        const response = await fetch('http://localhost:5001/api/insurance');
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/insurance`);
         if (!response.ok) throw new Error('Failed to fetch insurance options');
         const data = await response.json();
         console.log('Insurance options received:', data);
@@ -31,7 +31,7 @@ export default function GeneralInfoForm({ nextStep, handleChange, values }) {
     const fetchInsuranceDetails = async () => {
       if (formData.insuranceID) {
         try {
-          const response = await fetch(`http://localhost:5001/api/insurance/${formData.insuranceID}`);
+          const response = await fetch(`${process.env.REACT_APP_API_URL}/api/insurance/${formData.insuranceID}`);
           if (!response.ok) throw new Error('Failed to fetch insurance details');
           const data = await response.json();
           setSelectedInsurance(data);

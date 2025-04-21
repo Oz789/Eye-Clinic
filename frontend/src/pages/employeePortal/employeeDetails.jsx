@@ -12,7 +12,7 @@ const EmployeeDetails = () => {
 
     const fetchEmployee = async () => {
       try {
-        const res = await axios.get(`http://localhost:5001/api/employees`);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/employees`);
         const userData = res.data.find(emp => emp.employeeID == userID);
         setEmployee(userData);
         setFormData(userData);
@@ -33,7 +33,7 @@ const EmployeeDetails = () => {
 
   const handleSave = async () => {
     try {
-      await axios.put(`http://localhost:5001/api/employees/${employee.employeeID}`, formData);
+      await axios.put(`${process.env.REACT_APP_API_URL}/api/employees/${employee.employeeID}`, formData);
       setEmployee({ ...formData });  
       setEditMode(false);            
     } catch (err) {

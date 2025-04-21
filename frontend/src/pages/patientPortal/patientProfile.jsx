@@ -33,7 +33,7 @@ const PatientProfile = () => {
   const handleContactSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5001/api/contacts/submit', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/contacts/submit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ const PatientProfile = () => {
           ...(selectedServiceType && { serviceType: selectedServiceType })
         });
         
-        const res = await fetch(`http://localhost:5001/api/patients/${patientID}?${queryParams}`);
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/patients/${patientID}?${queryParams}`);
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
         }
@@ -104,7 +104,7 @@ const PatientProfile = () => {
 
     const fetchBillingHistory = async () => {
       try {
-        const res = await fetch(`http://localhost:5001/api/billing/history/${patientID}`);
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/billing/history/${patientID}`);
         if (!res.ok) throw new Error("Failed to fetch billing history");
         const data = await res.json();
         setBillingHistory(data);
@@ -142,10 +142,10 @@ const PatientProfile = () => {
   const fetchAllFormsForAppointment = async (appointmentNumber, patientID) => {
     try {
       const [nurseRes, examRes, referralRes, medicalRes] = await Promise.all([
-        fetch(`http://localhost:5001/api/nurseprep/appointment/${appointmentNumber}`),
-        fetch(`http://localhost:5001/api/examform/${appointmentNumber}`),
-        fetch(`http://localhost:5001/api/referrals/byAppointment/${appointmentNumber}`),
-        fetch(`http://localhost:5001/api/patients/${patientID}`),
+        fetch(`${process.env.REACT_APP_API_URL}/api/nurseprep/appointment/${appointmentNumber}`),
+        fetch(`${process.env.REACT_APP_API_URL}/api/examform/${appointmentNumber}`),
+        fetch(`${process.env.REACT_APP_API_URL}/api/referrals/byAppointment/${appointmentNumber}`),
+        fetch(`${process.env.REACT_APP_API_URL}/api/patients/${patientID}`),
       ]);
   
       const nurse = nurseRes.ok ? await nurseRes.json() : null;

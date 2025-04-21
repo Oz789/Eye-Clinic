@@ -40,7 +40,7 @@ const ReceptionistAppointments = () => {
 
   const fetchClinicAppointments = async (locationID) => {
     try {
-      const res = await fetch(`http://localhost:5001/api/appointments/clinicAppointmentsDebug/${locationID}`);
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/appointments/clinicAppointmentsDebug/${locationID}`);
 
       const data = await res.json();
         
@@ -93,7 +93,7 @@ const ReceptionistAppointments = () => {
 
   const handleCheckIn = async (appointmentID) => {
     try {
-      const res = await fetch(`http://localhost:5001/api/appointments/checkin/${appointmentID}`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/appointments/checkin/${appointmentID}`, {
         method: "PATCH",
       });
 

@@ -14,7 +14,7 @@ const ContactP = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5001/submit-form", formData);
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/submit-form`, formData);
       setStatus(res.data.message);
       setFormData({ name: "", email: "", phone: "", message: "" });
     } catch (error) {

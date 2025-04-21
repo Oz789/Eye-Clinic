@@ -14,8 +14,8 @@ const UserFrames = () => {
   useEffect(() => {
     const fetchAll = async () => {
       try {
-        const frameRes = await axios.get("http://localhost:5001/api/frames");
-        const contactRes = await axios.get("http://localhost:5001/api/eyecontacts");
+        const frameRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/frames`);
+        const contactRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/eyecontacts`);
 
         setFrames(frameRes.data);
         setContacts(contactRes.data);

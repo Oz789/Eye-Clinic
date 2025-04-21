@@ -26,7 +26,7 @@ const DoctorProfile = () => {
   useEffect(() => {
     const fetchDoctor = async () => {
       try {
-        const res = await fetch(`http://localhost:5001/api/doctors/${doctorID}`);
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/doctors/${doctorID}`);
         if (!res.ok) throw new Error("Failed to fetch doctor");
         const data = await res.json();
         setDoctor(data);
@@ -41,7 +41,7 @@ const DoctorProfile = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const res = await fetch(`http://localhost:5001/api/doctors/${doctorID}/appointments`);
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/doctors/${doctorID}/appointments`);
         if (!res.ok) throw new Error("Failed to fetch appointments");
         const data = await res.json();
         setAppointments(data);

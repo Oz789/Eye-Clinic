@@ -34,7 +34,7 @@ const StockMonitor = ({ onStockStatusChange }) => {
 
   const fetchInventory = async () => {
     try {
-      const res = await axios.get("http://localhost:5001/api/inventory");
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/inventory`);
       const filtered = res.data.filter(
         (item) => item.type === "frame" || item.type === "contact"
       );
@@ -59,7 +59,7 @@ const StockMonitor = ({ onStockStatusChange }) => {
 
       for (let item of items) {
         const res = await axios.get(
-          `http://localhost:5001/api/sales/item/${item.id}/${item.type}`
+          `${process.env.REACT_APP_API_URL}/api/sales/item/${item.id}/${item.type}`
         );
         const salesWithDetails = res.data.map((sale) => ({
           ...sale,

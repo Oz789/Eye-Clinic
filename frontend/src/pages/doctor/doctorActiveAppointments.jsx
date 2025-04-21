@@ -31,9 +31,9 @@ const DocActiveAppointments = () => {
       let url = "";
 
       if (role === "doctor" && doctorID) {
-        url = `http://localhost:5001/api/appointments/activeByDoctor/${doctorID}`;
+        url = `${process.env.REACT_APP_API_URL}/api/appointments/activeByDoctor/${doctorID}`;
       } else if (locationID) {
-        url = `http://localhost:5001/api/appointments/clinicAppointments/${locationID}`;
+        url = `${process.env.REACT_APP_API_URL}/api/appointments/clinicAppointments/${locationID}`;
       } else {
         return;
       }
@@ -176,7 +176,7 @@ const DocActiveAppointments = () => {
     onClick={async (e) => {
       e.stopPropagation();
       try {
-        const res = await fetch(`http://localhost:5001/api/appointments/end/${appt.appointmentID}`, {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/appointments/end/${appt.appointmentID}`, {
           method: 'PATCH'
         });
 

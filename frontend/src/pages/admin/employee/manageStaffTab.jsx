@@ -13,7 +13,7 @@ const AdminStaffTab = () => {
 
 
   useEffect(() => {
-    axios.get('http://localhost:5001/api/employees')
+    axios.get(`${process.env.REACT_APP_API_URL}/api/employees`)
       .then((res) => setEmployees(res.data));
   }, []);
 
@@ -21,7 +21,7 @@ const AdminStaffTab = () => {
     const confirmed = window.confirm("Are you sure you want to delete this employee?");
     if (!confirmed) return;
   
-    axios.delete(`http://localhost:5001/api/employees/${id}`)
+    axios.delete(`${process.env.REACT_APP_API_URL}/api/employees/${id}`)
       .then(() => {
         setEmployees((prev) => prev.filter(emp => emp.employeeID !== id));
       })
@@ -85,7 +85,7 @@ const AdminStaffTab = () => {
     data={selectedEmployee}
     onClose={() => setEditModalOpen(false)}
     onSave={async () => {
-      const res = await axios.get('http://localhost:5001/api/employees');
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/employees`);
       setEmployees(res.data);
       setEditModalOpen(false);
     }}

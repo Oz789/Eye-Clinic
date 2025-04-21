@@ -13,7 +13,7 @@ const Login = () => {
     localStorage.clear();
 
     try {
-      const res = await fetch("http://localhost:5001/api/login/employee", {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/login/employee`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -46,7 +46,7 @@ const Login = () => {
         }
       }
       
-      const resPatient = await fetch("http://localhost:5001/api/login/patient", {
+      const resPatient = await fetch(`${process.env.REACT_APP_API_URL}/api/login/patient`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

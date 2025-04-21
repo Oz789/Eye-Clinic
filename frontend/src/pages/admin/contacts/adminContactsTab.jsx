@@ -26,7 +26,7 @@ const AdminContactsTab = () => {
 
   const fetchContacts = async () => {
     try {
-      const res = await axios.get("http://localhost:5001/api/eyeContacts");
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/eyeContacts`);
           setContacts(res.data);
     } catch (error) {
       console.error("Failed to fetch contacts", error);
@@ -35,7 +35,7 @@ const AdminContactsTab = () => {
 
   const handleCreate = async (newContact) => {
     try {
-      await axios.post("http://localhost:5001/api/createContact", newContact);
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/createContact`, newContact);
       
       
       setModal(false);
@@ -47,7 +47,7 @@ const AdminContactsTab = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5001/api/contacts/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/contacts/${id}`);
       setViewModal(false);
 
       fetchContacts();

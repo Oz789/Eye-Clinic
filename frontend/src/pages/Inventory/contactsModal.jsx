@@ -32,7 +32,7 @@ const UserContactsModal = ({ data, onClose }) => {
   useEffect(() => {
     const fetchStock = async () => {
       try {
-        const res = await axios.get(`http://localhost:5001/api/checkout/stock/contacts/${data.contactID}`);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/checkout/stock/contacts/${data.contactID}`);
         setStockQuantity(res.data.stockCount);
       } catch (err) {
         console.error("Failed to fetch contact stock:", err);

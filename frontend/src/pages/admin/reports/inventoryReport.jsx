@@ -55,7 +55,7 @@ const InventoryReport = () => {
 
   const fetchInventoryItems = async () => {
     try {
-      const res = await axios.get("http://localhost:5001/api/inventory");
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/inventory`);
       setInventoryItems(res.data);
     } catch (err) {
       console.error("Error fetching inventory items:", err);
@@ -64,7 +64,7 @@ const InventoryReport = () => {
 
   const fetchLocations = async () => {
     try {
-      const res = await axios.get("http://localhost:5001/api/locations");
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/locations`);
       setLocations(res.data);
     } catch (err) {
       console.error("Error fetching locations:", err);
@@ -89,7 +89,7 @@ const InventoryReport = () => {
         if (selectedLocation) params.locationID = selectedLocation;
 
         const res = await axios.get(
-          `http://localhost:5001/api/sales/item/${item.id}/${item.type}`,
+          `${process.env.REACT_APP_API_URL}/api/sales/item/${item.id}/${item.type}`,
           { params }
         );
 

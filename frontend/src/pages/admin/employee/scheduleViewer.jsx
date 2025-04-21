@@ -37,7 +37,7 @@ const ScheduleViewer = () => {
   useEffect(() => {
     const fetchSchedules = async () => {
       try {
-        const res = await axios.get('http://localhost:5001/api/doctorschedule/all');
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/doctorschedule/all`);
         const all = res.data;
 
         const sorted1 = all

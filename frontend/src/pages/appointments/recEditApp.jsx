@@ -61,19 +61,19 @@ export default function RecAppEdit({ patientId, appointmentID, onAppointmentChan
 
   // ---------------- DATA FETCHING ----------------
   const fetchLocations = async () => {
-    const res = await fetch('http://localhost:5001/api/locations');
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/locations`);
     const data = await res.json();
     setLocations(data);
   };
 
   const fetchSchedules = async (locationID) => {
-    const res = await fetch(`http://localhost:5001/api/schedule/location/${locationID}`);
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/schedule/location/${locationID}`);
     const data = await res.json();
     setDoctorSchedules(data);
   };
 
   const fetchAppointments = async () => {
-    const res = await fetch(`http://localhost:5001/api/appointments?locationID=${selectedLocation}`);
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/appointments?locationID=${selectedLocation}`);
     const data = await res.json();
   
     console.log("📦 Raw API data:", data); // ← FULL object
@@ -118,7 +118,7 @@ export default function RecAppEdit({ patientId, appointmentID, onAppointmentChan
     if (!confirmed) return;
   
     try {
-      const res = await fetch(`http://localhost:5001/api/appointments/${appointmentID}`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/appointments/${appointmentID}`, {
         method: 'DELETE',
       });
 
@@ -163,7 +163,7 @@ export default function RecAppEdit({ patientId, appointmentID, onAppointmentChan
         locationID: selectedLocation
       });
 
-    const res = await fetch('http://localhost:5001/api/appointments', {
+    const res = await fetch(`${process.env.REACT_APP_API_URL}/api/appointments`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

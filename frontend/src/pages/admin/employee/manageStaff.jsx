@@ -17,12 +17,12 @@ const AdminStaff = () => {
   const [editData, setEditData] = useState({});
 
   useEffect(() => {
-    axios.get('http://localhost:5001/api/employees')
+    axios.get(`${process.env.REACT_APP_API_URL}/api/employees`)
       .then((res) => setEmployees(res.data));
   }, []);
 
   const handleDelete = (id) => {
-    axios.delete(`http://localhost:5001/api/employees/${id}`).then(() => {
+    axios.delete(`${process.env.REACT_APP_API_URL}/api/employees/${id}`).then(() => {
       setEmployees((prev) => prev.filter(emp => emp.employeeID !== id));
     });
   };
@@ -38,7 +38,7 @@ const AdminStaff = () => {
 
   const handleSave = async () => {
     try {
-      await axios.put(`http://localhost:5001/api/employees/${editingRow}`, editData);
+      await axios.put(`${process.env.REACT_APP_API_URL}/api/employees/${editingRow}`, editData);
       setEmployees((prev) =>
         prev.map((emp) =>
           emp.employeeID === editingRow ? { ...emp, ...editData } : emp

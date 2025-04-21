@@ -50,7 +50,7 @@ export default function MultiStepForm() {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/patients/submit', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/patients/submit`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

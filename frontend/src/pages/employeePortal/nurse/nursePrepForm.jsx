@@ -38,7 +38,7 @@ const NursePrepForm = ({ nurseID }) => {
     };
 
     try {
-      const res = await fetch(`http://localhost:5001/api/nurseprep/appointment/${appointmentNumber}`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/nurseprep/appointment/${appointmentNumber}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -59,7 +59,7 @@ const NursePrepForm = ({ nurseID }) => {
   useEffect(() => {
     const fetchPatientID = async () => {
       try {
-        const res = await fetch(`http://localhost:5001/api/get-patient-from-appointment/${appointmentNumber}`);
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/get-patient-from-appointment/${appointmentNumber}`);
         if (res.ok) {
           const data = await res.json();
           setPatientID(data.patientID);
@@ -73,7 +73,7 @@ const NursePrepForm = ({ nurseID }) => {
 
     const fetchForm = async () => {
       try {
-        const res = await fetch(`http://localhost:5001/api/nurseprep/appointment/${appointmentNumber}`);
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/nurseprep/appointment/${appointmentNumber}`);
         if (res.ok) {
           const data = await res.json();
           setForm({

@@ -17,7 +17,7 @@ const AdminEditPatientModal = ({ data, onClose, onSave }) => {
   const handleSubmit = async () => {
     setSaving(true);
     try {
-      await axios.patch(`http://localhost:5001/api/patients/${data.patientID}`, form);
+      await axios.patch(`${process.env.REACT_APP_API_URL}/api/patients/${data.patientID}`, form);
       if (typeof onSave === 'function') await onSave();
     } catch (error) {
       console.error("Error updating patient:", error);

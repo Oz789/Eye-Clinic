@@ -25,7 +25,7 @@ const AdminFrames = () => {
 
   const fetchFrames = async () => {
     try {
-      const res = await axios.get("http://localhost:5001/api/frames"); //fix this 
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/frames`); //fix this 
       setFrames(res.data);
     } catch (error) {
       console.error("Failed to fetch frames", error);
@@ -48,7 +48,7 @@ const AdminFrames = () => {
 
   const handleCreate = async (newFrame) => {
     try {
-      await axios.post("http://localhost:5001/api/createFrame", newFrame);
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/createFrame`, newFrame);
         setModal(false); 
       fetchFrames(); 
         console.log("Adding new frame:", newFrame);
@@ -60,8 +60,8 @@ const AdminFrames = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5001/api/frames/${id}`);
-      setViewModal(false);         // Close the modal
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/frames/${id}`);
+      setViewModal(false);        
       fetchFrames();              
       console.log("Deleted frame ID:", id);
     } catch (error) {

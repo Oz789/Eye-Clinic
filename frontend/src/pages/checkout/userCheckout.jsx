@@ -22,8 +22,8 @@ const UserCheckout = () => {
     const fetchItems = async () => {
       try {
         const [frames, contacts] = await Promise.all([
-          axios.get('http://localhost:5001/api/checkout/items/frames'),
-          axios.get('http://localhost:5001/api/checkout/items/contacts')
+          axios.get(`${process.env.REACT_APP_API_URL}/api/checkout/items/frames`),
+          axios.get(`${process.env.REACT_APP_API_URL}/api/checkout/items/contacts`)
         ]);
 
         const combined = [
@@ -75,7 +75,7 @@ const UserCheckout = () => {
         total: totalPrice
       };
 
-      await axios.post('http://localhost:5001/api/finalize-checkout', payload);
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/finalize-checkout`, payload);
       alert("Purchase successful!");
       clearCart();
       localStorage.removeItem("cart-storage");

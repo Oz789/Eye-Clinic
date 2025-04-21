@@ -40,7 +40,7 @@ const RestockFormModal = ({ item, onClose, onSuccess }) => {
 
   const handleSubmit = async () => {
     try {
-      await axios.post("http://localhost:5001/api/most-purchased", {
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/most-purchased`, {
         itemID: item.id,
         itemType: item.type,
         restockAmount: quantity,

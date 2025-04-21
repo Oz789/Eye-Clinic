@@ -15,7 +15,7 @@ const NurseProfilePage = () => {
   useEffect(() => {
     console.log("🧪 Nurse employeeID from route:", employeeID);
     if (employeeID) {
-      fetch(`http://localhost:5001/api/employees/${employeeID}`)
+      fetch(`${process.env.REACT_APP_API_URL}/api/employees/${employeeID}`)
         .then((res) => res.json())
         .then((data) => setEmployee(data))
         .catch((err) => console.error("Error fetching employee:", err));

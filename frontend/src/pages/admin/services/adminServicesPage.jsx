@@ -24,7 +24,7 @@ const [selectedService, setSelectedService] = useState(null);
 
   const fetchServices = async () => {
     try {
-      const res = await axios.get("http://localhost:5001/api/services");
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/services`);
       setServices(res.data);
     } catch (err) {
       console.error("Failed to fetch services:", err);
@@ -33,7 +33,7 @@ const [selectedService, setSelectedService] = useState(null);
 
   const handleCreate = async (newService) => {
     try {
-      await axios.post("http://localhost:5001/api/createService", newService);
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/createService`, newService);
       setModalOpen(false);
       fetchServices();
     } catch (err) {
@@ -43,7 +43,7 @@ const [selectedService, setSelectedService] = useState(null);
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5001/api/services/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/services/${id}`);
       setViewModal(false);
       fetchServices();
       console.log("Deleted service:", id);

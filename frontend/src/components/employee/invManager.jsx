@@ -7,7 +7,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5001',
+  baseURL: `${process.env.REACT_APP_API_URL}`,
 });
 
 
@@ -57,12 +57,12 @@ const columns = [
     const [msg, SetMsg] = useState([]);
     // useEffect(() => {
     //   axios
-    //     .post('http://localhost:5001/api/test', { message: "Hello from React!" }) 
+    //    
     //     .then((response) => console.log(response.data))
     //     .catch((error) => console.error(" Error fetching test route:", error));
     // }, []);
     useEffect(() => {
-      axios.get('http://localhost:5001/api/messages')
+      axios.get(`${process.env.REACT_APP_API_URL}/api/messages`)
       .then((response) => SetMsg(response.data))
       .catch((error) => console.error("Error fetching messages:", error));
     }, []);
