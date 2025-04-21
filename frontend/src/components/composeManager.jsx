@@ -14,8 +14,8 @@ const ComposeManager = ({ senderId, senderType, onCancel, goBack }) => {
       try {
         const endpoint =
           senderType === 'employee'
-            ? `http://localhost:5001/api/employees/${senderId}`
-            : `http://localhost:5001/api/patients/${senderId}`;
+            ? `${process.env.REACT_APP_API_URL}/api/employees/${senderId}`
+            : `${process.env.REACT_APP_API_URL}/api/patients/${senderId}`;
 
         const res = await axios.get(endpoint);
 

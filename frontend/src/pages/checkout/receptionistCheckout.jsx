@@ -27,9 +27,9 @@ const ReceptionistCheckout = ({ appointmentNumber: propAppt, patientID: propPati
     const fetchItems = async () => {
       try {
         const [services, frames, contacts] = await Promise.all([
-          axios.get('http://localhost:5001/api/checkout/items/services'),
-          axios.get('http://localhost:5001/api/checkout/items/frames'),
-          axios.get('http://localhost:5001/api/checkout/items/contacts')
+          axios.get(`${process.env.REACT_APP_API_URL}/api/checkout/items/services`),
+          axios.get(`${process.env.REACT_APP_API_URL}/api/checkout/items/frames`),
+          axios.get(`${process.env.REACT_APP_API_URL}/api/checkout/items/contacts`)
         ]);
 
         const combined = [
@@ -48,7 +48,7 @@ const ReceptionistCheckout = ({ appointmentNumber: propAppt, patientID: propPati
 
   useEffect(() => {
     if (!appointmentNumber) return; 
-    axios.get(`http://localhost:5001/api/checkout/${appointmentNumber}`)
+    axios.get(`${process.env.REACT_APP_API_URL}/api/checkout/${appointmentNumber}`)
       .then(res => {
         const base = res.data.baseService;
         if (base && !cart.some(item => item.itemID === base.serviceID && item.type === 'service')) {
@@ -96,7 +96,7 @@ const ReceptionistCheckout = ({ appointmentNumber: propAppt, patientID: propPati
         total: totalPrice
       };
 
-      await axios.post('http://localhost:5001/api/finalize-checkout', payload);
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/finalize-checkout`, payload);
       alert("Checkout successful!");
       clearCart();
       localStorage.removeItem("cart-storage");

@@ -21,9 +21,9 @@ const CheckedInAppointments = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       let url = role === "doctor" && doctorID
-        ? `http://localhost:5001/api/appointments/clinicAppointments/any?doctorID=${doctorID}`
+        ? `${process.env.REACT_APP_API_URL}/api/appointments/clinicAppointments/any?doctorID=${doctorID}`
         : locationID
-        ? `http://localhost:5001/api/appointments/clinicAppointments/${locationID}`
+        ? `${process.env.REACT_APP_API_URL}/api/appointments/clinicAppointments/${locationID}`
         : null;
 
       if (!url) return;
@@ -66,7 +66,7 @@ const CheckedInAppointments = () => {
     if (!appt?.appointmentID || !appt?.patientID) return;
 
     try {
-      const res = await fetch(`http://localhost:5001/api/appointments/update-status/${appt.appointmentID}`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/appointments/update-status/${appt.appointmentID}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: "In Progress" }),

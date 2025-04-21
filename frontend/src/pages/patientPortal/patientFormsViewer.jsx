@@ -13,7 +13,7 @@ const PatientFormViewerFull = ({ patientIDProp }) => {
   useEffect(() => {
     const fetchAllForms = async () => {
       try {
-        const res = await fetch(`http://localhost:5001/api/allPatientForms/${patientID}`);
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/allPatientForms/${patientID}`);
         if (!res.ok) throw new Error("Failed to fetch form data.");
         const data = await res.json();
         setFormsData(data);

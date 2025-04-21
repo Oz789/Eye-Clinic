@@ -14,14 +14,14 @@ const DoctorProfilePage = () => {
   const [patients, setPatients] = useState([]);
 
   useEffect(() => {
-    fetch(`http://localhost:5001/api/doctors/${doctorID}`)
+    fetch(`${process.env.REACT_APP_API_URL}/api/doctors/${doctorID}`)
       .then((res) => res.json())
       .then((data) => setDoctor(data))
       .catch((err) => console.error("Error fetching doctor:", err));
   }, [doctorID]);
 
   useEffect(() => {
-    fetch(`http://localhost:5001/api/doctors/${doctorID}/appointments`)
+    fetch(`${process.env.REACT_APP_API_URL}/api/doctors/${doctorID}/appointments`)
 
       .then((res) => res.json())
       .then(setAppointments)

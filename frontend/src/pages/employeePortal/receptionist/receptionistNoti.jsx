@@ -7,14 +7,14 @@ const ReceptionistNotifications = () => {
 
   useEffect(() => {
     if (userID) {
-      axios.get(`http://localhost:5001/api/notifications/${userID}`)
+      axios.get(`${process.env.REACT_APP_API_URL}/api/notifications/${userID}`)
         .then(res => setNotifications(res.data))
         .catch(err => console.error("Failed to fetch notifications", err));
     }
-  }, [userID]);
+  }, [userID]); 
 
   const handleClick = (notif) => {
-    axios.patch(`http://localhost:5001/api/notifications/mark-read/${notif.notificationID}`)
+    axios.patch(`${process.env.REACT_APP_API_URL}/api/notifications/mark-read/${notif.notificationID}`)
       .then(() => {
         setNotifications(prev => prev.filter(n => n.notificationID !== notif.notificationID));
       })

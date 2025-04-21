@@ -18,7 +18,7 @@ const ReferralBookingForm = () => {
   useEffect(() => {
     const fetchReferralInfo = async () => {
       try {
-        const res = await axios.get(`http://localhost:5001/api/referrals/${referralID}/details`);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/referrals/${referralID}/details`);
         const data = res.data;
 
         setDetails(data);
@@ -51,7 +51,7 @@ const ReferralBookingForm = () => {
         patientID: details.patientID,
       };
 
-      await axios.post("http://localhost:5001/api/referral-appointments", payload);
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/referral-appointments`, payload);
       alert("Referral appointment booked!");
       navigate("/receptionist-profile");
     } catch (err) {

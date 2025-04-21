@@ -9,8 +9,8 @@ const UniversalEmailSelector = ({ selectedRecipients, setSelectedRecipients }) =
     const fetchAll = async () => {
       try {
         const [empRes, patRes] = await Promise.all([
-          fetch('http://localhost:5001/api/employees'),
-          fetch('http://localhost:5001/api/pati'),
+          fetch(`${process.env.REACT_APP_API_URL}/api/employees`),
+          fetch(`${process.env.REACT_APP_API_URL}/api/pati`),
         ]);
         const employees = await empRes.json();
         const patients = await patRes.json();

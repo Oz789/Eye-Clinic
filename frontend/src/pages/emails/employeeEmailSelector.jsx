@@ -12,7 +12,7 @@ const EmployeeEmailSelector = ({ selectedRecipients, setSelectedRecipients }) =>
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:5001/api/nonadmin/')
+    fetch(`${process.env.REACT_APP_API_URL}/api/nonadmin/`)
       .then((res) => res.json())
       .then((data) => {
         if (!Array.isArray(data)) {

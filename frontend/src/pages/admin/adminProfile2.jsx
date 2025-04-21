@@ -11,7 +11,7 @@ const AdminProfilePage = () => {
   const [admin, setAdmin] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:5001/api/employees/${employeeID}`)
+    fetch(`${process.env.REACT_APP_API_URL}/api/employees/${employeeID}`)
       .then((res) => res.json())
       .then((data) => setAdmin(data))
       .catch((err) => console.error("Error fetching admin data:", err));

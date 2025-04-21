@@ -13,7 +13,7 @@ const EmployeeProfilePage = () => {
 
   // Fetch employee
   useEffect(() => {
-    fetch(`http://localhost:5001/api/employees/${employeeID}`)
+    fetch(`${process.env.REACT_APP_API_URL}/api/employees/${employeeID}`)
       .then((res) => res.json())
       .then((data) => setEmployee(data))
       .catch((err) => console.error("Error fetching employee:", err));
@@ -23,7 +23,7 @@ const EmployeeProfilePage = () => {
   useEffect(() => {
     const checkLowStock = async () => {
       try {
-        const res = await fetch("http://localhost:5001/api/inventory");
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/inventory`);
         const data = await res.json();
         const lowStock = data.some(
           (item) => (item.type === "frame" || item.type === "contact") && item.stockCount < 5

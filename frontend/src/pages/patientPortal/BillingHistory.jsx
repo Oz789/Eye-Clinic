@@ -11,7 +11,7 @@ const BillingHistory = () => {
   useEffect(() => {
     const fetchBillingHistory = async () => {
       try {
-        const response = await fetch(`http://localhost:5001/api/billing/history/${patientID}`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/billing/history/${patientID}`);
         if (!response.ok) {
           throw new Error('Failed to fetch billing history');
         }

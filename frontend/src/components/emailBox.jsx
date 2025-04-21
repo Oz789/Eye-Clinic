@@ -35,7 +35,7 @@ const EmailBox = ({defaultRecipient}) => {
     };
   
     try {
-      const res = await fetch('http://localhost:5001/api/sendmsg/', {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/sendmsg/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -53,7 +53,7 @@ const EmailBox = ({defaultRecipient}) => {
       alert("Message sent successfully!");
       
       if (defaultRecipient) {
-        await axios.post('http://localhost:5001/api/responded', {
+        await axios.post(`${process.env.REACT_APP_API_URL}/api/responded`, {
           messageId: defaultRecipient.id,
           recipientId: senderId,
           recipientType: userType

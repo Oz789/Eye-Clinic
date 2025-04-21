@@ -12,7 +12,7 @@ const PatientFormViewer = ({ patientID }) => {
     const fetchPatientData = async () => {
       try {
         console.log(patientID + "   HEdjdRE");
-        const res = await fetch(`http://localhost:5001/api/patients/${patientID}`);
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/patients/${patientID}`);
         if (!res.ok) throw new Error("Failed to fetch patient");
         const data = await res.json();
         setPatientData(data);

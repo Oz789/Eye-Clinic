@@ -27,7 +27,7 @@ const ReplyManager = (props) => {
         
         if(props.mes.sender_type === 'employee')
           {
-            let res = await axios.get(`http://localhost:5001/api/employees/${props.mes.sender_id}`); //props.mes.sender_id
+            let res = await axios.get(`${process.env.REACT_APP_API_URL}/api/employees/${props.mes.sender_id}`); //props.mes.sender_id
             console.log(res);
             if (res.data) {
               console.log("Apparent Name: " + res.data.role);
@@ -66,7 +66,7 @@ const ReplyManager = (props) => {
       e.preventDefault();
       try {
         console.log("Sending data to the server:", formData); // Debug: log form data
-        const res = await axios.post("http://localhost:5001/api/submit-form", formData);
+        const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/submit-form`, formData);
         setStatus(res.data.message);
         setFormData({ name: "", email: "", phone: "", message: "" }); // Reset form
       } catch (error) {

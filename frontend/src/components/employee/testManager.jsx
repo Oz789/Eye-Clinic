@@ -33,7 +33,7 @@ const styles = {
       const [locationOptions, setLocationOptions] = useState([]);
 
       useEffect(() => {
-        axios.get("http://localhost:5001/api/schedule/options")
+        axios.get(`${process.env.REACT_APP_API_URL}/api/schedule/options`)
           .then((res) => {
             setDoctorOptions(
               res.data.doctors.map(doc => ({
@@ -84,7 +84,7 @@ const styles = {
         };
 
         try {
-          await axios.post('http://localhost:5001/api/schedule', newEvent);
+          await axios.post(`${process.env.REACT_APP_API_URL}/api/schedule`, newEvent);
           setEvents(prev => [...prev, newEvent]);
         } catch (err) {
           console.error("Error saving event:", err);
@@ -143,7 +143,7 @@ const styles = {
       //       };
           
       //       try {
-      //         await axios.post("http://localhost:5001/api/schedule", newEvent);
+      //         
       //         alert("Event saved!");
           
       //         // Optional: add to calendar display
@@ -235,7 +235,7 @@ const styles = {
         };
 
         // useEffect(() => {
-        //     axios.get('http://localhost:5001/api/schedule').then((res) => {
+        //    
         //       console.log(res.data)
         //         setConfig(prev =>({
         //             ...prev,

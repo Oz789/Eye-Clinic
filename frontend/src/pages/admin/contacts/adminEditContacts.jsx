@@ -22,7 +22,7 @@ const AdminEditContacts = ({ data, onClose, onEdit, onDelete }) => {
 
   const handleEditSubmit = async () => {
     try {
-      await axios.patch(`http://localhost:5001/api/contacts/${data.contactID}`, form);
+      await axios.patch(`${process.env.REACT_APP_API_URL}/api/contacts/${data.contactID}`, form);
       if (typeof onEdit === "function") await onEdit(); 
       if (typeof onClose === "function") onClose();    
     } catch (error) {

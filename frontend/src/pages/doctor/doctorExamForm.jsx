@@ -35,7 +35,7 @@ const DoctorExamForm = () => {
   useEffect(() => {
     const fetchSavedExam = async () => {
       try {
-        const res = await fetch(`http://localhost:5001/api/examform/${appointmentID}`);
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/examform/${appointmentID}`);
         if (res.ok) {
           const data = await res.json();
           console.log("🧠 Loaded saved exam data:", data);
@@ -102,7 +102,7 @@ const DoctorExamForm = () => {
         patientID
       };
 
-      const res = await fetch('http://localhost:5001/api/examReports', {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/examReports`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

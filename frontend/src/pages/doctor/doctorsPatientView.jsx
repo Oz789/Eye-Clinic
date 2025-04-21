@@ -12,7 +12,7 @@ const PatientFormViews = ({ patientID: propID }) => {
   useEffect(() => {
     if (!patientID) return;
 
-    fetch(`http://localhost:5001/api/patient/${patientID}`)
+    fetch(`${process.env.REACT_APP_API_URL}/api/patient/${patientID}`)
       .then(res => res.json())
       .then(setData)
       .catch(err => console.error('Error loading patient data:', err));

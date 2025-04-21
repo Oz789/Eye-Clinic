@@ -26,7 +26,7 @@ const AdminEditEmployeeModal = ({ data, onClose, onSave }) => {
   const handleSubmit = async () => {
     setSaving(true);
     try {
-      await axios.patch(`http://localhost:5001/api/employees/${data.employeeID}`, form);
+      await axios.patch(`${process.env.REACT_APP_API_URL}/api/employees/${data.employeeID}`, form);
       if (typeof onSave === 'function') await onSave();
     } catch (error) {
       console.error("Failed to update employee:", error);

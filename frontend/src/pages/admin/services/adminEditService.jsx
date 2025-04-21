@@ -20,7 +20,7 @@ const AdminEditService = ({ data, onClose, onDelete }) => {
   };
   const handleEditSubmit = async () => {
     try {
-      await axios.patch(`http://localhost:5001/api/services/${service.serviceID}`, service);
+      await axios.patch(`${process.env.REACT_APP_API_URL}/api/services/${service.serviceID}`, service);
       setEditMode(false);
       alert("Service updated successfully!");
     } catch (err) {

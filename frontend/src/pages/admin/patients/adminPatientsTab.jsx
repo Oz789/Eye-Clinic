@@ -9,7 +9,7 @@ const ManagePatients = () => {
   const [selectedPatient, setSelectedPatient] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:5001/api/adminPatients')
+    axios.get(`${process.env.REACT_APP_API_URL}/api/adminPatients`)
 
       .then((res) => setPatients(res.data))
       .catch((err) => console.error("Failed to fetch patients:", err));
@@ -20,7 +20,7 @@ const ManagePatients = () => {
     if (!confirmed) return;
   
     try {
-        await axios.delete(`http://localhost:5001/api/patients/${id}`);
+        await axios.delete(`${process.env.REACT_APP_API_URL}/api/patients/${id}`);
 
       setPatients((prev) => prev.filter(p => p.patientID !== id));
     } catch (err) {
@@ -77,7 +77,7 @@ const ManagePatients = () => {
     data={selectedPatient}
     onClose={() => setEditModalOpen(false)}
     onSave={async () => {
-      const res = await axios.get('http://localhost:5001/api/patients');
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/patients`);
       setPatients(res.data);
       setEditModalOpen(false);
     }}

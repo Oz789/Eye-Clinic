@@ -25,7 +25,7 @@ const ClinicAppointments = () => {
 
   const handleCheckIn = async (appointmentID) => {
     try {
-      const res = await fetch(`http://localhost:5001/api/appointments/checkin/${appointmentID}`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/appointments/checkin/${appointmentID}`, {
         method: "PATCH",
       });
   
@@ -50,7 +50,7 @@ const ClinicAppointments = () => {
   useEffect(() => {
     if (!locationID) return;
 
-    fetch(`http://localhost:5001/api/appointments/clinicAppointments/${locationID}`)
+    fetch(`${process.env.REACT_APP_API_URL}/api/appointments/clinicAppointments/${locationID}`)
       .then(res => res.json())
       .then(data => {
         const formatted = data.map(appt => {
@@ -133,7 +133,7 @@ const ClinicAppointments = () => {
     style={{ backgroundColor: "#00796B" }}
     onClick={async () => {
       try {
-        const res = await fetch(`http://localhost:5001/api/appointments/update-status/${appt.appointmentID}`, {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/appointments/update-status/${appt.appointmentID}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ status: "Checked In" }),

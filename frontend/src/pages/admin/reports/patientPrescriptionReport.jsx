@@ -237,7 +237,7 @@ const PatientPrescriptionReport = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.get("http://localhost:5001/api/patientReport/");
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/patientReport/`);
       const data = response.data;
       
       if (data.length === 0) {

@@ -28,7 +28,7 @@ const NurseExamPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`http://localhost:5001/api/patient-info/${patientID}`);
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/patient-info/${patientID}`);
         const data = await res.json();
         setFormData(data);
       } catch (err) {
@@ -52,7 +52,7 @@ const NurseExamPage = () => {
 
   const handleSubmit = async () => {
     try {
-      const res = await fetch(`http://localhost:5001/api/patients/update-form/${formData.medicalForm.medicalFormID}`, {
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/api/patients/update-form/${formData.medicalForm.medicalFormID}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData.medicalForm),

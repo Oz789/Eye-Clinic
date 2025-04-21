@@ -13,7 +13,7 @@ import ComposeManager from './composeManager';
 
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5001',
+  baseURL: `${process.env.REACT_APP_API_URL}`,
 });
 const theme = createTheme({
   components: {
@@ -90,12 +90,12 @@ const columns = [
         const senderType = employeeID ? 'employee' : 'patient';
         if (!senderId) return;
       
-        let endpoint = 'http://localhost:5001/api/mess/user'; // default "all"
+        let endpoint = `${process.env.REACT_APP_API_URL}/api/mess/user`; // default "all"
 
         if (inboxView === 'focused') {
-          endpoint = 'http://localhost:5001/api/mess/unresponded';
+          endpoint = `${process.env.REACT_APP_API_URL}/api/mess/unresponded`;
         } else if (inboxView === 'sent') {
-          endpoint = 'http://localhost:5001/api/mess/sent';
+          endpoint = `${process.env.REACT_APP_API_URL}/api/mess/sent`;
         }
       
         axios.post(endpoint, {
@@ -112,7 +112,7 @@ const columns = [
     }
 
     // useEffect(() => {
-    //   axios.get('http://localhost:5001/api/messages')
+    //  
     //   .then((response) => SetEntry(response.data))
     //   .catch((error) => console.error("Error fetching messages:", error));
     // }, []);
