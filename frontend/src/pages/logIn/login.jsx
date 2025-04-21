@@ -11,6 +11,7 @@ const Login = () => {
   const handleLogin = async () => {
     console.log("Sending login for:", email, password);
     localStorage.clear();
+    console.log("🌍 Using API:", process.env.REACT_APP_API_URL);
 
     try {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/api/login/employee`, {
