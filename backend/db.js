@@ -21,14 +21,14 @@ const db = mysql.createPool({
 (async () => {
   try {
     const connection = await db.getConnection();
-    console.log("✅ Connected to Azure MySQL Database");
+    console.log("Connected to Azure MySQL Database");
 
     const [result] = await connection.query("SELECT 1");
-    console.log("✅ Test query result:", result);
+    console.log("Test query result:", result);
 
     connection.release();
   } catch (err) {
-    console.error("❌ Error connecting to DB:", err);
+    console.error("Error connecting to DB:", err);
   }
 })();
 

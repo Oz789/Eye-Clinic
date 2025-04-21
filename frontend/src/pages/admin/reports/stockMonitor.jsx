@@ -110,22 +110,8 @@ const StockMonitor = ({ onStockStatusChange }) => {
               mostPurchased.item.name
             } - ${mostPurchased.item.model} (${mostPurchased.quantity} sold)`}
           </Typography>
-          <Typography sx={{ mt: 1, fontStyle: "italic", color: "#555" }}>
-            We recommend restocking this item with {RESTOCK_AMOUNT * 2} units.
-          </Typography>
-          <Button
-            variant="outlined"
-            size="small"
-            sx={{ mt: 1 }}
-            onClick={() =>
-              setRestockModalItem({
-                ...mostPurchased.item,
-                suggestedQty: RESTOCK_AMOUNT * 2,
-              })
-            }
-          >
-            Restock Suggested Amount
-          </Button>
+          
+       
         </Box>
       )}
 

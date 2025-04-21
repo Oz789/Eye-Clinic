@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './ScheduleAppointment.css';
+import './receptionistApp.css';
 
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-export default function ScheduleAppointment({ prevStep, patientId }) {
+export default function ScheduleAppointment({ patientId, patientFirst, patientLast }) {
   const [appointments, setAppointments] = useState({});
   const [selected, setSelected] = useState({ date: '', time: '', doctorId: ''});
   const [locations, setLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState('');
-  const [selectedServiceType, setSelectedServiceType] = useState('');
   const [doctorSchedules, setDoctorSchedules] = useState([]);
+  const [selectedServiceType, setSelectedServiceType] = useState('');
 
   const [baseDate, setBaseDate] = useState(new Date());
   const navigate = useNavigate();
@@ -41,97 +41,63 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
   const getDayName = (dateStr) =>
     new Date(dateStr).toLocaleDateString('en-US', { weekday: 'long' });
 
-  const toInt = (value) => parseInt(value, 10);
-
   const generateTimeSlots = (start, end) => {
     const slots = [];
     let [sh, sm] = start.split(':').map(Number);
     const [eh, em] = end.split(':').map(Number);
-    
     while (sh < eh || (sh === eh && sm < em)) {
       const time = new Date(0, 0, 0, sh, sm).toLocaleTimeString([], {
         hour: '2-digit',
         minute: '2-digit',
       });
       slots.push(time);
-      sm += 30; // Changed from 60 to 30 for 30-minute intervals
+      sm += 60;
       if (sm >= 60) {
         sh++;
         sm = 0;
       }
     }
-    
     return slots;
   };
 
+  // ---------------- DATA FETCHING ----------------
   const fetchLocations = async () => {
-    try {
-      const res = await fetch('http://localhost:5001/api/locations');
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      const data = await res.json();
-      console.log("Locations data:", data);
-      // Ensure data is an array before setting it
-      setLocations(Array.isArray(data) ? data : []);
-    } catch (err) {
-      console.error("Error fetching locations:", err);
-      // Set locations to empty array on error
-      setLocations([]);
-    }
+    const res = await fetch('http://localhost:5001/api/locations');
+    const data = await res.json();
+    setLocations(data);
   };
 
   const fetchSchedules = async (locationID) => {
-    console.log(`Fetching schedules for location ${locationID}`);
-    try {
-      const res = await fetch(`http://localhost:5001/api/schedule/location/${locationID}`);
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      const data = await res.json();
-      console.log("Fetched doctor schedules:", data);
-      setDoctorSchedules(data);
-    } catch (err) {
-      console.error("Error fetching schedules:", err);
-    }
+    const res = await fetch(`http://localhost:5001/api/schedule/location/${locationID}`);
+    const data = await res.json();
+    setDoctorSchedules(data);
   };
-
-  useEffect(() => {
-    console.log("Doctor schedules state changed:", doctorSchedules);
-  }, [doctorSchedules]);
 
   const fetchAppointments = async () => {
-    try {
-      const res = await fetch(`http://localhost:5001/api/appointments?locationID=${selectedLocation}`);
-      const data = await res.json();
-    
-      console.log("📦 Raw API data:", data);
-    
-      if (!Array.isArray(data)) {
-        console.error("Expected array but got:", data);
-        return;
-      }
-    
-      const map = {};
-      data.forEach(({ appointmentDate, appointmentTime }) => {
-        const dateStr = appointmentDate.substring(0, 10);
-        const timeStr = appointmentTime.trim().padStart(8, '0');
-    
-        console.log(`Extracted date: ${dateStr}, time: ${timeStr}`);
-    
-        if (!map[dateStr]) map[dateStr] = new Set();
-        map[dateStr].add(timeStr);
-        console.log(`Mapped DB date → ${appointmentDate} → ${dateStr} with time ${timeStr}`);
-      });
-    
-      console.log("Final Appointments Before Set:", map);
-      setAppointments(map);
-    } catch (err) {
-      console.error("Error fetching appointments:", err);
-      setAppointments({});
-    }
+    const res = await fetch(`http://localhost:5001/api/appointments?locationID=${selectedLocation}`);
+    const data = await res.json();
+  
+    console.log("📦 Raw API data:", data); // ← FULL object
+  
+    const map = {};
+    data.forEach(({ appointmentDate, appointmentTime }) => {
+      const dateStr = appointmentDate.substring(0, 10);
+      const timeStr = appointmentTime.trim().padStart(8, '0');
+  
+      console.log(`Extracted date: ${dateStr}, time: ${timeStr}`); // ← Track parsed values
+  
+      if (!map[dateStr]) map[dateStr] = new Set();
+      map[dateStr].add(timeStr);
+      console.log(`Mapped DB date → ${appointmentDate} → ${dateStr} with time ${timeStr}`);
+    });
+  
+    console.log("Final Appointments Before Set:", map);
+    setAppointments(map);
   };
+  
+  
 
+  // ---------------- EFFECTS ----------------
   useEffect(() => {
     fetchLocations();
   }, []);
@@ -143,226 +109,198 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
     }
   }, [selectedLocation]);
 
+  // ---------------- ACTIONS ----------------
   const handleSelect = (date, time, doctorId) => {
-    console.log("Selected appointment:", { date, time, doctorId });
     setSelected({ date, time, doctorId });
   };
 
   const handleConfirm = async () => {
     const { date, time, doctorId } = selected;
-    console.log("Confirming appointment with:", { date, time, doctorId, patientId, selectedServiceType, selectedLocation });
-
-    if (!date || !time || !doctorId || !patientId || !selectedServiceType || !selectedLocation) {
-      console.warn("Missing required fields:", {
-        date: !date,
-        time: !time,
-        doctorId: !doctorId,
-        patientId: !patientId,
-        serviceType: !selectedServiceType,
-        location: !selectedLocation
-      });
-      alert('Please fill in all required fields');
-      return;
-    }
-
-    const time24 = convertTo24Hour(time);
-    
- 
-    const selectedDate = new Date(date);
-    const formattedDate = selectedDate.toISOString().split('T')[0];
-    
- 
-    const selectedDayOfWeek = new Date(date + 'T00:00:00Z').toLocaleDateString('en-US', {
-      weekday: 'long',
-      timeZone: 'UTC'
-    });
-
-
-    const doctorSchedule = doctorSchedules.find(schedule => 
-      schedule.doctorID === doctorId && 
-      schedule.dayOfWeek.toLowerCase() === selectedDayOfWeek.toLowerCase()
-    );
-
-    if (!doctorSchedule) {
-      const doctorSchedulesForDoctor = doctorSchedules.filter(s => s.doctorID === doctorId);
-      const availableDays = [...new Set(doctorSchedulesForDoctor.map(s => s.dayOfWeek))];
-      alert(`Doctor is not available on ${selectedDayOfWeek}. Available days: ${availableDays.join(', ')}`);
-      return;
-    }
-
+    console.log(" Confirming:", selected);
   
-    const [selectedHour, selectedMinute] = time24.split(':').map(Number);
-    const [startHour, startMinute] = doctorSchedule.startTime.split(':').map(Number);
-    const [endHour, endMinute] = doctorSchedule.endTime.split(':').map(Number);
-
-    const selectedTimeInMinutes = selectedHour * 60 + selectedMinute;
-    const startTimeInMinutes = startHour * 60 + startMinute;
-    const endTimeInMinutes = endHour * 60 + endMinute;
-
-    if (selectedTimeInMinutes < startTimeInMinutes || selectedTimeInMinutes >= endTimeInMinutes) {
-      alert(`Selected time ${time} is outside of doctor's working hours (${doctorSchedule.startTime} - ${doctorSchedule.endTime})`);
+    if (!date || !time || !doctorId || !selectedLocation) {
+      console.warn(" Missing required fields");
       return;
     }
-
-    try {
-      const response = await fetch('http://localhost:5001/api/appointments', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          date: formattedDate,
-          time: time24,
-          patientId,
-          doctorId,
-          service1ID: selectedServiceType,
-          locationID: selectedLocation
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to schedule appointment');
+  
+    const time24 = convertTo24Hour(time);
+  
+    const res = await fetch('http://localhost:5001/api/appointments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        date,
+        time: time24,
+        patientId,
+        doctorId,
+        service1ID: selectedServiceType,
+        locationID: selectedLocation
+      }),
+    });
+  
+    if (res.ok) {
+      alert('Appointment scheduled!');
+      fetchAppointments();
+      setSelected({ date: '', time: '', doctorId: '', service1ID: '4' });
+  
+  
+      navigate('/home');
+    } else {
+      if (selectedServiceType === '') {
+        alert('Please select a service');
+      } else {
+        alert('That time is no longer available.');
       }
-
-      const data = await response.json();
-      console.log('Appointment scheduled successfully:', data);
-      alert('Appointment scheduled successfully!');
-      navigate(`/home`);
-    } catch (error) {
-      console.error('Error scheduling appointment:', error);
-      alert(error.message || 'Failed to schedule appointment. Please try again.');
     }
   };
+
 
   const scheduleMap = {};
   doctorSchedules.forEach((entry) => {
-    console.log("Processing schedule entry:", entry);
     if (!scheduleMap[entry.dayOfWeek]) scheduleMap[entry.dayOfWeek] = [];
     scheduleMap[entry.dayOfWeek].push(entry);
   });
-  console.log("Schedule map:", scheduleMap);
-
-  const getNextWeekday = (date, offset) => {
-    const nextDate = new Date(date);
-    nextDate.setDate(date.getDate() + offset);
-    return nextDate;
-  };
 
   return (
-    <div className="appointment-container">
-      <div className="appointment-header">
-        <h2>Schedule Appointment</h2>
-      </div>
+    <div className="rec-page">
+      <div className="rec-container ">
+        <div className="rec-box fex">
+          <h2 className="rec-title">Schedule Appointment</h2>
+          <p className="starter"> Appointment for:  {`${patientFirst} ${patientLast}`}</p>
 
-      <div className="appointment-grid">
-        <div className="location-selector">
-          <select
-            value={selectedLocation}
-            onChange={(e) => {
-              setSelectedLocation(e.target.value);
-              setSelectedServiceType('');
-            }}
-          >
-            <option value="">Select Location</option>
-            {locations.map((loc) => (
-              <option key={loc.locationID} value={loc.locationID}>
-                {loc.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {(selectedLocation === '1' || selectedLocation === '2') && (
-          <div className="service-selector">
+          {/* SELECT LOCATION */}
+          <div className="rec-row ">
+          
+            <p>Select Location:</p>
             <select
-              value={selectedServiceType}
-              onChange={(e) => setSelectedServiceType(e.target.value)}
-              required
+              value={selectedLocation}
+              onChange={(e) => {setSelectedLocation(e.target.value); setSelectedServiceType('');}}
             >
-              <option value="">Select Service Type</option>
-              <option value="4">Eye Exam</option>
-              <option value="5">Disease and Eye Treatment</option>
+              <option value="">Select Location</option>
+
+              {locations.map((loc) => (
+                <option key={loc.locationID} value={loc.locationID}>
+                  {loc.name}
+                </option>
+              ))}
             </select>
           </div>
-        )}
+
+                    {/* SELECT SERVICE TYPE (only for Eye Clinic 1 and 2) */}
+                    {(selectedLocation === '1' || selectedLocation === '2') && (
+            <div className="input-row">
+              <p>Select Service Type:</p>
+              <select
+                value={selectedServiceType}
+                onChange={(e) => {setSelectedServiceType(e.target.value); console.log(e.target.value)}}
+                required
+              >
+                <option value="">Select Service Type</option>
+                <option value="4">Eye Exam</option>
+                <option value="5">Disease and Eye Treatment</option>
+              </select>
+            </div>
+          )}
+
+        {selectedLocation && (
+        <div>
+          <div className="calendar-picker-container"> 
+            <label>Select Week:</label>
+            <DatePicker
+              selected={baseDate}
+              onChange={(date) => setBaseDate(date)}
+              dateFormat="MMMM d, yyyy"
+              inline
+              showPopperArrow={false}
+              minDate={new Date()}
+            />
+          </div>
+
+          {/* TIME SLOT PICKER */}
+          
+            <div className="appointment-grid" style={{ marginTop: '2rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: `repeat(${daysToShow}, minmax(20px, 1fr))`, gap: '10px' }}>
+              
+              {(() => {
+  // const baseDate = new Date();
+  // baseDate.setHours(12); 
+
+  const startDate = new Date(baseDate);
+  startDate.setHours(12);
+
+  
+
+  return [...Array(daysToShow)].map((_, idx) => {
+    const dateObj = new Date(startDate);
+    dateObj.setDate(startDate.getDate() + idx);
+
+    const dateStr = dateObj.toISOString().split('T')[0];
+    const abbrevDay = dateObj.toLocaleDateString('en-US', { weekday: 'short' }); // e.g., "Mon"
+    const readableDate = dateObj.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    }); // e.g., "Apr 15, 2025"
+
+    const schedules = scheduleMap[dateObj.toLocaleDateString('en-US', { weekday: 'long' })] || [];
+
+    return (
+      <div key={dateStr} className="time-column">
+        <div className="day-header">
+          <span className="day-abbrev">{abbrevDay}</span>
+          <span className="day-date">{readableDate}</span>
+        </div>
+
+        {schedules.map((sched) => {
+          const slots = generateTimeSlots(sched.startTime, sched.endTime);
+          return (
+            <div key={`${sched.doctorID}-${sched.scheduleID}`} className="slot-group">
+              {slots.map((hour) => {
+                const hour24 = convertTo24Hour(hour);
+                const isBooked = appointments[dateStr]?.has(hour24);
+                const isSelected =
+                  selected.date === dateStr &&
+                  convertTo24Hour(selected.time) === hour24 &&
+                  selected.doctorId === sched.doctorID;
+
+                return (
+                  <button
+                    key={hour}
+                    onClick={() => handleSelect(dateStr, hour, sched.doctorID, buffer)}
+                    disabled={isBooked}
+                    className={`time-slot ${isSelected ? 'selected' : ''} ${isBooked ? 'booked' : ''}`}
+                  >
+                    {hour}
+                  </button>
+                );
+              })}
+            </div>
+          );
+        })}
       </div>
+    );
+  });
+})()}
 
-      {selectedLocation && (
-        <div className="time-slot-grid">
-          {[...Array(daysToShow)].map((_, idx) => {
-            const dateObj = getNextWeekday(baseDate, idx);
-            const dateStr = dateObj.toISOString().split('T')[0];
-            const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
-            if (dayName === 'Sunday') return null;
+    </div>
+  </div>
+  </div>
+)}
 
-            const currentSchedules = scheduleMap[dayName] || [];
-            if (currentSchedules.length === 0) return null;
-            const readableDate = dateObj.toDateString();
+          
+          <div className="nav-buttons" style={{ marginTop: '2rem' }}>
+            {/* <button >Close</button> */}
 
-            const schedules = scheduleMap[dayName] || [];
-            console.log(`Checking schedules for ${dayName} (${dateStr}):`, schedules);
-
-            return (
-              <div key={dateStr}>
-                <h3 style={{ color: '#2c3e50', marginBottom: '1rem' }}>
-                  {dayName}<br />
-                  {readableDate}
-                </h3>
-
-                {currentSchedules.map((sched) => {
-                  console.log(`Generating slots for doctor ${sched.doctorID} on ${dayName}`);
-                  const slots = generateTimeSlots(sched.startTime, sched.endTime);
-
-                  return (
-                    <div key={`${sched.doctorID}-${sched.scheduleID}`} style={{ marginBottom: '1rem' }}>
-                      <p className="doctor-info">
-                        Dr. {sched.firstName} {sched.lastName}
-                      </p>
-
-                      {slots.map((hour) => {
-                        const hour24 = convertTo24Hour(hour);
-                        const isBooked = appointments[dateStr]?.has(hour24);
-                        const isSelected =
-                          selected.date === dateStr &&
-                          convertTo24Hour(selected.time) === hour24 &&
-                          selected.doctorId === sched.doctorID;
-                        const isDisabled = isBooked || 
-                          ((selectedLocation === '1' || selectedLocation === '2') && !selectedServiceType);
-
-                        return (
-                          <button
-                            key={hour}
-                            onClick={() => handleSelect(dateStr, hour, sched.doctorID)}
-                            disabled={isDisabled}
-                            className={`time-slot ${isSelected ? 'selected' : ''} ${isBooked ? 'unavailable' : ''}`}
-                          >
-                            {hour}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      {selected.date && (
-        <div className="confirmation-section">
-          <h3>Appointment Details</h3>
-          <div className="confirmation-details">
-            <p><strong>Date:</strong> {new Date(selected.date).toLocaleDateString()}</p>
-            <p><strong>Time:</strong> {selected.time}</p>
-          </div>
-          <div className="action-buttons">
-            <button onClick={prevStep}>Back</button>
-            <button onClick={handleConfirm}>Confirm Appointment</button>
+            {/* CONFIRM BUTTON */}
+            <button
+              onClick={handleConfirm}
+              disabled={!selected.date || !selected.time || !selected.doctorId}
+            >
+              Confirm Appointment
+            </button>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

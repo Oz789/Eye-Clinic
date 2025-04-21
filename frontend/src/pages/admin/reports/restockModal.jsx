@@ -140,7 +140,7 @@ const RestockFormModal = ({ item, onClose, onSuccess }) => {
             </Button>
           ) : orderPlaced ? (
             <Typography sx={{ mt: 1 }} color="success.main">
-              📦 Order placed. Shipment is on its way!
+              Order Placed
             </Typography>
           ) : (
             <Button
