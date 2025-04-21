@@ -126,89 +126,77 @@ const DocActiveAppointments = () => {
                 </div>
 
                 <div className="appt-buttons">
-                  {appt.status === "Checked In" && (
-                    <button
-                      className="appointment-button"
-                      onClick={(e) => {
-                        e.stopPropagation(); // prevent card click
-                        navigate(`/nurseExamPage/${appt.patientID}`);
-                      }}
-                    >
-                      Begin Exam
-                    </button>
-                  )}
-                  <button
-  className="appt-btn"
-  style={{
-    backgroundColor: "#0288d1",
-    color: "white",
-    marginLeft: "0.5rem"
-  }}
-  onClick={(e) => {
-    e.stopPropagation();
-    navigate(`/nurseForm/${appt.appointmentID}`);
-  }}
->
-  Nurse Form
-</button>
-
-
-                  <button
-                    className="appt-btn refer"
-                    disabled={!appt.isReferred}
-                    style={{
-                      backgroundColor: appt.isReferred ? "#00796B" : "#ccc",
-                      color: appt.isReferred ? "white" : "#666",
-                      marginLeft: "0.5rem"
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation(); 
-                      if (appt.isReferred) {
-                        navigate(`/referral-booking`);
-                      }
-                    }}
-                  >
-                    Book Referral
-                  </button>
-                  {appt.status === "In Progress" && (
   <button
-    className="appt-btn end"
-    onClick={async (e) => {
-      e.stopPropagation();
-      try {
-        const res = await fetch(`${process.env.REACT_APP_API_URL}/api/appointments/end/${appt.appointmentID}`, {
-          method: 'PATCH'
-        });
-
-        if (res.ok) {
-          alert(" Appointment marked as ended.");
-          setAppointments(prev =>
-            prev.map(a =>
-              a.appointmentID === appt.appointmentID
-                ? { ...a, status: "Ended" }
-                : a
-            )
-          );
-        } else {
-          alert("⚠️ Failed to end appointment.");
-        }
-      } catch (err) {
-        console.error("End error:", err);
-        alert("Server error while ending appointment.");
-      }
-    }}
+    className="appt-btn"
     style={{
-      backgroundColor: "#b71c1c",
+      backgroundColor: "#0288d1",
       color: "white",
       marginLeft: "0.5rem"
     }}
+    onClick={(e) => {
+      e.stopPropagation();
+      navigate(`/nurseForm/${appt.appointmentID}`);
+    }}
   >
-    End Appointment
+    Nurse Form
   </button>
-)}
 
+  <button
+    className="appt-btn refer"
+    disabled={!appt.isReferred}
+    style={{
+      backgroundColor: appt.isReferred ? "#00796B" : "#ccc",
+      color: appt.isReferred ? "white" : "#666",
+      marginLeft: "0.5rem"
+    }}
+    onClick={(e) => {
+      e.stopPropagation(); 
+      if (appt.isReferred) {
+        navigate(`/referral-booking`);
+      }
+    }}
+  >
+    Book Referral
+  </button>
 
-                </div>
+  {appt.status === "In Progress" && (
+    <button
+      className="appt-btn end"
+      onClick={async (e) => {
+        e.stopPropagation();
+        try {
+          const res = await fetch(`${process.env.REACT_APP_API_URL}/api/appointments/end/${appt.appointmentID}`, {
+            method: 'PATCH'
+          });
+
+          if (res.ok) {
+            alert(" Appointment marked as ended.");
+            setAppointments(prev =>
+              prev.map(a =>
+                a.appointmentID === appt.appointmentID
+                  ? { ...a, status: "Ended" }
+                  : a
+              )
+            );
+          } else {
+            alert("⚠️ Failed to end appointment.");
+          }
+        } catch (err) {
+          console.error("End error:", err);
+          alert("Server error while ending appointment.");
+        }
+      }}
+      style={{
+        backgroundColor: "#b71c1c",
+        color: "white",
+        marginLeft: "0.5rem"
+      }}
+    >
+      End Appointment
+    </button>
+  )}
+</div>
+
               </div>
             ))}
           </div>
