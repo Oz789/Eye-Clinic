@@ -4,12 +4,13 @@ import PatientFormViewer from "../patientPortal/patientFormViewer";
 import EmployeeDetails from "../employeePortal/employeeDetails";
 import CheckedInAppointments from "../employeePortal/checkedIn";
 import DocActiveAppointments from "./doctorActiveAppointments";
-import ReceptionistAppointments from "../employeePortal/receptionistAppointments";
+import ReceptionistAppointments from "../employeePortal/receptionist/receptionistAppointments";
 import ClinicAppointments from "../employeePortal/clinicAppointments";
+import { Box, Typography, Tabs, Tab, Paper } from '@mui/material';
 
 // import other tab content 
 
-const DoctorTabContent = ({ activeTab,doctor }) => {
+const DoctorTabContent = ({ activeTab, doctor }) => {
 
   const toggleMessager = () => {
     setMessager(!messager)
@@ -24,21 +25,21 @@ const DoctorTabContent = ({ activeTab,doctor }) => {
   switch (activeTab) {
   
     case 0:
-        return <EmployeeDetails/>
+        return (
+          <div className="w-full flex flex-row justify-center">
+            <DocActiveAppointments />
+          </div>
+        );
         
           case 1:
-            return (
-              <div className="w-full flex flex-row justify-center">
-                {/* <DoctorActiveAppointments /> */}
-              </div>
-            );
+            return <EmployeeDetails/>
+              
     case 2:
-      return <DocActiveAppointments/>;
+      return ;
 
     case 3:
-      return <ReceptionistAppointments/>;
-    case 4:
-   return <ClinicAppointments/>;
+      return 
+  
     default:
       return null;
   }

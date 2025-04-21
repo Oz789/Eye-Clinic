@@ -8,7 +8,7 @@ router.get('/doctors/:doctorID/appointments', async (req, res) => {
   const { doctorID } = req.params;
 
   try {
-    const [rows] = await db.promise().query(
+    const [rows] = await db.query(
       `SELECT 
         a.appointmentNumber,
         a.patientID,
@@ -27,8 +27,12 @@ router.get('/doctors/:doctorID/appointments', async (req, res) => {
     res.json(rows);
   } catch (err) {
     console.error('❌ Error fetching doctor appointments:', err);
-    res.status(500).json({ error: 'Failed to fetch doctor appointments' });
+    res.status(500).json({ 
+      error: 'Failed to fetch doctor appointments',
+      details: err.message
+    });
   }
 });
 
 module.exports = router;
+

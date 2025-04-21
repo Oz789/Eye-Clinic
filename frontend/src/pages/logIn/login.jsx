@@ -29,6 +29,7 @@ const Login = () => {
   
         if (data.role === "admin") {
           return navigate(`/adminProfile/${data.user.employeeID}`);
+
         } else if (data.role === "doctor") {
           localStorage.setItem("doctorID", data.doctorInfo.doctorID);
           console.log("DOCTOR INFO:", data.doctorInfo);
@@ -93,9 +94,7 @@ const Login = () => {
             </div>
             <button className="login-button" onClick={handleLogin}>Log In</button>
 
-            <p className="forgot-password">
-  <a href="#">Forgot Password</a>
-</p>
+            
 
 <p className="register-link">
   New user? <a href="/register">Register here</a>

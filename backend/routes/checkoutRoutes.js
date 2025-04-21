@@ -3,57 +3,68 @@ const router = express.Router();
 const db = require('../db');
 
 router.post('/', async (req, res) => {
-  const { patientID, items } = req.body;
+  console.log("Checkout route hit");
 
-  if (!patientID || !Array.isArray(items) || items.length === 0) {
-    return res.status(400).json({ error: 'Invalid checkout data' });
-  }
+  const { patientID, appointmentNumber, items, total } = req.body;
+  console.log("Payload received:", { patientID, appointmentNumber, items, total });
+
+  const connection = await db.getConnection();
 
   try {
-    let totalPrice = 0;
-    
-    // Get frame details (prices) from the inventory table
-    const frameDetailsQuery = `
-      SELECT frameID, price FROM inventorys WHERE frameID IN (${items.map(item => item.frameID).join(",")})
-    `;
-    
-    const [frameDetails] = await db.promise().query(frameDetailsQuery);
-    const framePriceMap = new Map(frameDetails.map(f => [f.frameID, f.price]));
+    await connection.beginTransaction();
+    console.log("🔐 Transaction started");
 
-    // Calculate total price and insert items into the itembilling table
+    // Insert into Sales table
+    const [saleResult] = await connection.query(
+      `INSERT INTO Sales (patientID, appointmentNumber, totalAmount, saleDate)
+       VALUES (?, ?, ?, NOW())`,
+      [patientID, appointmentNumber, total]
+    );
+    const saleID = saleResult.insertId;
+    console.log("Sale inserted with ID:", saleID);
+
+    // Insert sale items and update stock
     for (const item of items) {
-      const { frameID } = item;
-      const framePrice = framePriceMap.get(frameID);
-      
-      if (framePrice) {
-        totalPrice += framePrice;
+      console.log("➡️ Processing item:", item);
 
-        // Insert into itembilling table
-        const insertQuery = `
-          INSERT INTO itembilling (patientID, frameID, orderDate, total, paymentStatus)
-          VALUES (?, ?, NOW(), ?, 'pending')
-        `;
-        await db.promise().query(insertQuery, [patientID, frameID, framePrice]);
+      await connection.query(
+        `INSERT INTO SaleItems (saleID, itemID, itemType, quantity, price)
+         VALUES (?, ?, ?, ?, ?)`,
+        [saleID, item.itemID, item.itemType, item.quantity, item.price]
+      );
+      console.log("Sale item inserted");
 
-        // Update stock
-        const updateStock = `
-          UPDATE inventory SET stockCount = stockCount - 1 WHERE frameID = ? AND stockCount > 0
-        `;
-        await db.promise().query(updateStock, [frameID]);
-      }
+      await connection.query(
+        `UPDATE Inventory
+         SET stockQuantity = stockQuantity - ?
+         WHERE itemID = ? AND itemType = ?`,
+        [item.quantity, item.itemID, item.itemType]
+      );
+      console.log("Inventory updated");
     }
 
-    // Now we calculate total owned and update the billing info for the patient (optional step)
-    const updatePatientBilling = `
-      UPDATE patient SET totalOwned = totalOwned + ? WHERE patientID = ?
-    `;
-    await db.promise().query(updatePatientBilling, [totalPrice, patientID]);
+    await connection.query(
+      `UPDATE Appointments
+       SET status = 'Completed'
+       WHERE appointmentNumber = ?`,
+      [appointmentNumber]
+    );
+    console.log("Appointment marked as completed");
 
-    res.status(200).json({ message: 'Checkout successful', totalPrice });
+    await connection.commit();
+    connection.release();
+
+    console.log("🎉 Transaction committed successfully");
+    res.status(200).json({ message: "Checkout complete and appointment updated." });
+
   } catch (err) {
-    console.error('Checkout error:', err);
-    res.status(500).json({ error: 'Checkout failed' });
+    await connection.rollback();
+    connection.release();
+    console.error("Checkout DB error:", err);
+    res.status(500).json({ error: "Checkout failed. Please try again." });
   }
 });
 
 module.exports = router;
+
+

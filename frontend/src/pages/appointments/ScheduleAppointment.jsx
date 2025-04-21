@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './form.css';
+import './receptionistApp.css';
 
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-export default function ScheduleAppointment({ prevStep, patientId }) {
+export default function ScheduleAppointment({ patientId, patientFirst, patientLast }) {
   const [appointments, setAppointments] = useState({});
   const [selected, setSelected] = useState({ date: '', time: '', doctorId: ''});
   const [locations, setLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState('');
-  const [selectedServiceType, setSelectedServiceType] = useState('');
   const [doctorSchedules, setDoctorSchedules] = useState([]);
+  const [selectedServiceType, setSelectedServiceType] = useState('');
 
   const [baseDate, setBaseDate] = useState(new Date());
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
   useEffect(() => {
     console.log("Appointments state changed:", appointments);
   }, [appointments]);
-  // ---------------- TIME HELPERS ----------------
+
   const convertTo24Hour = (time12h) => {
     const [time, modifier] = time12h.split(' ');
     let [hours, minutes] = time.split(':');
@@ -40,8 +40,6 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
 
   const getDayName = (dateStr) =>
     new Date(dateStr).toLocaleDateString('en-US', { weekday: 'long' });
-
-  const toInt = (value) => parseInt(value, 10);
 
   const generateTimeSlots = (start, end) => {
     const slots = [];
@@ -72,7 +70,6 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
   const fetchSchedules = async (locationID) => {
     const res = await fetch(`http://localhost:5001/api/schedule/location/${locationID}`);
     const data = await res.json();
-    console.log("Schedule Data:", data); // Debug log
     setDoctorSchedules(data);
   };
 
@@ -114,68 +111,50 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
 
   // ---------------- ACTIONS ----------------
   const handleSelect = (date, time, doctorId) => {
-    setSelected({ date, time, doctorId});
-  };
-
-  // Update the test function
-  const testBackendConnection = async () => {
-    try {
-      console.log("Testing backend connection...");
-      // Try to get appointments instead of using a test endpoint
-      const res = await fetch('http://localhost:5001/api/appointments');
-      if (res.ok || res.status === 400) { // 400 is okay because it means the endpoint exists
-        console.log("Backend is reachable");
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error("Backend connection test failed:", error);
-      return false;
-    }
+    setSelected({ date, time, doctorId });
   };
 
   const handleConfirm = async () => {
-    const { date, time, doctorId} = selected;
+    const { date, time, doctorId } = selected;
+    console.log(" Confirming:", selected);
+  
     if (!date || !time || !doctorId || !selectedLocation) {
-      console.log("Missing fields:", { ...selected, locationID: selectedLocation });
+      console.warn(" Missing required fields");
       return;
     }
   
     const time24 = convertTo24Hour(time);
-    console.log("Submitting appointment:", { date, time: time24, doctorId, patientId, locationID: selectedLocation });
   
-    try {
-      const res = await fetch('http://localhost:5001/api/appointments', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          date,
-          time: time24,
-          patientId,
-          doctorId,
-          service1ID: selectedServiceType,
-          locationID: selectedLocation
-        }),
-      });
+    const res = await fetch('http://localhost:5001/api/appointments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        date,
+        time: time24,
+        patientId,
+        doctorId,
+        service1ID: selectedServiceType,
+        locationID: selectedLocation
+      }),
+    });
   
-      const text = await res.text(); // Show raw response in console
-      console.log("Server response:", res.status, text);
+    if (res.ok) {
+      alert('Appointment scheduled!');
+      fetchAppointments();
+      setSelected({ date: '', time: '', doctorId: '', service1ID: '4' });
   
-      if (res.ok) {
-        alert('Appointment scheduled!');
-        navigate(`/userProfile/${patientId}`);
+  
+      navigate('/home');
+    } else {
+      if (selectedServiceType === '') {
+        alert('Please select a service');
       } else {
-        console.log(selectedServiceType);
-        alert('That time is no longer available or server error.');
+        alert('That time is no longer available.');
       }
-    } catch (err) {
-      console.error("Fetch failed:", err);
-      alert("Something went wrong");
     }
   };
-  
 
-  // ---------------- DISPLAY ----------------
+
   const scheduleMap = {};
   doctorSchedules.forEach((entry) => {
     if (!scheduleMap[entry.dayOfWeek]) scheduleMap[entry.dayOfWeek] = [];
@@ -183,20 +162,19 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
   });
 
   return (
-    <div className="login-page">
-      <div className="login-container">
-        <div className="login-box">
-          <h2 className="login-title">Schedule Appointment</h2>
+    <div className="rec-page">
+      <div className="rec-container ">
+        <div className="rec-box fex">
+          <h2 className="rec-title">Schedule Appointment</h2>
+          <p className="starter"> Appointment for:  {`${patientFirst} ${patientLast}`}</p>
 
           {/* SELECT LOCATION */}
-          <div className="input-row">
+          <div className="rec-row ">
+          
             <p>Select Location:</p>
             <select
               value={selectedLocation}
-              onChange={(e) => {
-                setSelectedLocation(e.target.value);
-                setSelectedServiceType(''); // Reset service type when location changes
-              }}
+              onChange={(e) => {setSelectedLocation(e.target.value); setSelectedServiceType('');}}
             >
               <option value="">Select Location</option>
 
@@ -208,8 +186,8 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
             </select>
           </div>
 
-          {/* SELECT SERVICE TYPE (only for Eye Clinic 1 and 2) */}
-          {(selectedLocation === '1' || selectedLocation === '2') && (
+                    {/* SELECT SERVICE TYPE (only for Eye Clinic 1 and 2) */}
+                    {(selectedLocation === '1' || selectedLocation === '2') && (
             <div className="input-row">
               <p>Select Service Type:</p>
               <select
@@ -224,102 +202,108 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
             </div>
           )}
 
+        {selectedLocation && (
+        <div>
+          <div className="calendar-picker-container"> 
+            <label>Select Week:</label>
+            <DatePicker
+              selected={baseDate}
+              onChange={(date) => setBaseDate(date)}
+              dateFormat="MMMM d, yyyy"
+              inline
+              showPopperArrow={false}
+              minDate={new Date()}
+            />
+          </div>
+
           {/* TIME SLOT PICKER */}
-          {selectedLocation && (
+          
             <div className="appointment-grid" style={{ marginTop: '2rem' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: `repeat(${daysToShow}, 1fr)` }}>
-                {(() => {
-                  const baseDate = new Date();
-                  baseDate.setHours(12);
+              <div style={{ display: 'grid', gridTemplateColumns: `repeat(${daysToShow}, minmax(20px, 1fr))`, gap: '10px' }}>
+              
+              {(() => {
+  // const baseDate = new Date();
+  // baseDate.setHours(12); 
 
-                  return [...Array(daysToShow)].map((_, idx) => {
-                    const dateObj = new Date(baseDate);
-                    dateObj.setDate(baseDate.getDate() + idx);
+  const startDate = new Date(baseDate);
+  startDate.setHours(12);
 
-                    const dateStr = dateObj.toISOString().split('T')[0];
-                    const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
-                    const readableDate = dateObj.toDateString();
+  
 
-                    const schedules = scheduleMap[dayName] || [];
+  return [...Array(daysToShow)].map((_, idx) => {
+    const dateObj = new Date(startDate);
+    dateObj.setDate(startDate.getDate() + idx);
 
-                    return (
-                      <div key={dateStr}>
-                        <h4 style={{ fontWeight: 'bold', color: '#00796B' }}>
-                          {dayName}<br />
-                          {readableDate}
-                        </h4>
+    const dateStr = dateObj.toISOString().split('T')[0];
+    const abbrevDay = dateObj.toLocaleDateString('en-US', { weekday: 'short' }); // e.g., "Mon"
+    const readableDate = dateObj.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    }); // e.g., "Apr 15, 2025"
 
-                        {schedules.map((sched) => {
-                          const slots = generateTimeSlots(sched.startTime, sched.endTime);
+    const schedules = scheduleMap[dateObj.toLocaleDateString('en-US', { weekday: 'long' })] || [];
 
-                          return (
-                            <div key={`${sched.doctorID}-${sched.scheduleID}`} style={{ marginBottom: '1rem' }}>
-                              <small style={{ color: '#444', fontStyle: 'italic' }}>
-                                {sched.doctorName}
-                              </small>
+    return (
+      <div key={dateStr} className="time-column">
+        <div className="day-header">
+          <span className="day-abbrev">{abbrevDay}</span>
+          <span className="day-date">{readableDate}</span>
+        </div>
 
-                              {slots.map((hour) => {
-                                const hour24 = convertTo24Hour(hour);
-                                const isBooked = appointments[dateStr]?.has(hour24);
-                                const isSelected =
-                                  selected.date === dateStr &&
-                                  convertTo24Hour(selected.time) === hour24 &&
-                                  selected.doctorId === sched.doctorID;
-                                const isDisabled = isBooked || 
-                                  ((selectedLocation === '1' || selectedLocation === '2') && !selectedServiceType);
+        {schedules.map((sched) => {
+          const slots = generateTimeSlots(sched.startTime, sched.endTime);
+          return (
+            <div key={`${sched.doctorID}-${sched.scheduleID}`} className="slot-group">
+              {slots.map((hour) => {
+                const hour24 = convertTo24Hour(hour);
+                const isBooked = appointments[dateStr]?.has(hour24);
+                const isSelected =
+                  selected.date === dateStr &&
+                  convertTo24Hour(selected.time) === hour24 &&
+                  selected.doctorId === sched.doctorID;
 
-                      return (
-                        <button
-                        key={hour}
-                        onClick={() =>
-                          handleSelect(dateStr, hour, sched.doctorID)
-                        }
-                        disabled={isBooked}
-                        style={{
-                          backgroundColor: isSelected
-                            ? '#28a745'
-                            : isBooked
-                            ? '#f0f0f0'
-                            : '#ffffff',
-                          color: isBooked ? '#aaa' : '#00796B',
-                          border: isSelected
-                            ? '2px solid #28a745'
-                            : '2px solid #00796B',
-                          margin: '4px',
-                          padding: '6px',
-                          width: '100%',
-                          borderRadius: '6px',
-                          cursor: isBooked ? 'not-allowed' : 'pointer',
-                          fontSize: '0.85rem',
-                          fontWeight: 'bold',
-                          opacity: isBooked ? 0.5 : 1,
-                          transition: '0.2s ease',
-                        }}
-                      >
-                        {hour}
-                      </button>
-                      
-                      );
-                    })}
-                  </div>
+                return (
+                  <button
+                    key={hour}
+                    onClick={() => handleSelect(dateStr, hour, sched.doctorID, buffer)}
+                    disabled={isBooked}
+                    className={`time-slot ${isSelected ? 'selected' : ''} ${isBooked ? 'booked' : ''}`}
+                  >
+                    {hour}
+                  </button>
                 );
               })}
             </div>
           );
-        });
-      })()}
+        })}
+      </div>
+    );
+  });
+})()}
 
     </div>
-          {/* CONFIRM BUTTON */}
-          <div className="nav-buttons" style={{ marginTop: '2rem' }}>
-            <button onClick={prevStep}>Back</button>
-            <button type="button" onClick={handleConfirm}>Confirm Appointment</button>
-          </div>
+  </div>
   </div>
 )}
 
+          
+          <div className="nav-buttons" style={{ marginTop: '2rem' }}>
+            {/* <button >Close</button> */}
+
+            {/* CONFIRM BUTTON */}
+            <button
+              onClick={handleConfirm}
+              disabled={!selected.date || !selected.time || !selected.doctorId}
+            >
+              Confirm Appointment
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 }
+
+
+

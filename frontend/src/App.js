@@ -11,7 +11,7 @@ import AdminDashboard from "./pages/admin/adminDashboard";
 import DoctorProfilePage from "./pages/doctor/doctorProfilePage";
 import ContactP from "./pages/contact/contactUs";
 import AboutP from "./pages/about/aboutPage";
-import EmployeeProfilePage from "./pages/employeePortal/receptionistProfile";
+import EmployeeProfilePage from "./pages/employeePortal/receptionist/receptionistProfile";
 import EmployeeForm from "./pages/employeePortal/employeeForm";
 import ScheduleAppointment from "./pages/appointments/ScheduleAppointment";
 import AdminFrames from "./pages/admin/frames/adminFrames";
@@ -26,15 +26,24 @@ import CartPage from "./pages/CartPage";  // Import CartPage component
 import Checkout from "./pages/billing/paymentForm";
 import PatientFormViewer from "./pages/doctor/doctorsPatientView";
 import RegisterPatient from "./pages/logIn/register";
-import NurseProfilePage from "./pages/employeePortal/nurseProfile";
-import NurseExamPage from "./pages/employeePortal/nurseExamPage";
+import NurseProfilePage from "./pages/employeePortal/nurse/nurseProfile";
+import NurseExamPage from "./pages/employeePortal/nurse/nurseExamPage";
 import DoctorExamForm from './pages/doctor/doctorExamForm';
+import PatientReport from "./pages/admin/reports/patientReport";
+import PatientDemographicsReport from "./pages/admin/reports/patientDemographicsReport";
+import PatientPrescriptionReport from "./pages/admin/reports/patientPrescriptionReport";
+import AdminReports from "./pages/admin/reports/adminReportsPage";
 //import ReferralForm from "./pages/doctor/referral";
 import CheckoutPage from './components/checkoutPage';
 import UserCheckout from "./pages/checkout/userCheckout";
 import ReceptionistCheckout from "./pages/checkout/receptionistCheckout";
-import ReferralBookingForm from './pages/employeePortal/receptionistReferralForm';
-
+import ReferralBookingForm from './pages/referral/referralApptForm';
+import SchManager from "./components/employee/schManager";
+import NursePrepForm from "./pages/employeePortal/nurse/nursePrepForm";
+import AdminDoctorSchedule from './pages/admin/employee/scheduler';
+import StockMonitor from "./pages/admin/reports/stockMonitor";
+import PatientInbox from "./pages/patientPortal/patientInbox";
+import FullFormViewer from "./pages/patientPortal/patientFormsViewer";
 
 
 
@@ -42,7 +51,7 @@ import ReferralBookingForm from './pages/employeePortal/receptionistReferralForm
 
 function App() {
   return (
-    <CartProvider>  {/* Wrap your app in CartProvider */}
+    <CartProvider> 
       <Router>
         <Routes>
           <Route path="/home" element={<Home />} />
@@ -61,8 +70,12 @@ function App() {
           <Route path="/admin/admin-eyeContacts" element={<AdminContacts />} />
           <Route path="/admin/admin-services" element={<AdminServices />} />
           <Route path="/admin/manageStaff" element={<AdminStaff />} />
+          <Route path="/admin/reports" element={<AdminReports />} />
           <Route path="/adminProfile/:employeeID" element={<AdminProfilePage />} />
           <Route path="/inventory-report" element={<InventoryReport />} />
+          <Route path="/patient-report" element={<PatientReport />} />
+          <Route path="/patientDemographicsReport" element={<PatientDemographicsReport />} />
+          <Route path="/patientPrescriptionReport" element={<PatientPrescriptionReport />} />
           <Route path="/payment" element={<PaymentForm />} />
           <Route path="/cart" element={<CartPage />} />
           
@@ -75,14 +88,15 @@ function App() {
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/userCheckout" element={<UserCheckout />} />
           <Route path="/apptCheckout" element={<ReceptionistCheckout/>} />
-          <Route path="/referral-booking/:referralID" element={<ReferralBookingForm />}
-/>
+          <Route path="/referral-booking" element={<ReferralBookingForm />} />
+          <Route path="/appt2" element={<SchManager />} />
+          <Route path="/nurseForm/:appointmentNumber" element={<NursePrepForm />} />
+          <Route path="/admin/doctor-schedule" element={<AdminDoctorSchedule />} />
+          <Route path="/stock-manager" element={<StockMonitor />} />
+          <Route path="/userInbox/:patientID" element={<PatientInbox />} />
+          <Route path="/allForms/:patientID" element={<FullFormViewer />} />
           
-
-
-
-
-
+          
 
         </Routes>
       </Router>
